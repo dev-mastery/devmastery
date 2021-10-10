@@ -13,6 +13,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
+      - name: deps
+        run: |
+          npm ci
       - name: build
         run: |
           npm run build
