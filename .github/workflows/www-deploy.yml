@@ -1,0 +1,24 @@
+on: 
+  push:
+    branches:
+      - main
+    paths:
+     - "www"
+
+jobs:
+  deploy:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: build
+        run: |
+          npm run build
+        working-directory: ./www
+      - name: test
+        run: |
+          npx start-test 3000
+        working-directory: ./www
+      - name: deploy
+        run: |
+          npm run deploy
+        working-directory: ./www
+      
