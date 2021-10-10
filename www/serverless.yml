@@ -1,2 +1,6 @@
 wwwDevmastery:
-  component: "@sls-next/serverless-component@3.4.0" 
+  component: "@sls-next/serverless-component@3.4.0"
+  inputs:
+    domain: ["alpha", "devmastery.com"]
+    cloudfront: 
+      distributionId: E2X1E7GQ17HKY2
