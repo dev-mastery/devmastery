@@ -1,6 +1,6 @@
 {
   "name": "www",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "cypress run",
-    "deploy": "serverless -- --debug"
+    "deploy": "serverless --debug"
   },
   "dependencies": {
     "next": "11.1.2",
