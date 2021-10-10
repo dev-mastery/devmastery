@@ -1,0 +1,24 @@
+{
+  "name": "devmastery",
+  "version": "1.0.0-alpha",
+  "description": "Monorepo for Dev Mastery properties.",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "www",
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-mastery/devmastery.git"
+  },
+  "author": "Bill Sourour <bill@devmastery.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/dev-mastery/devmastery/issues"
+  },
+  "homepage": "https://github.com/dev-mastery/devmastery#readme"
+}
