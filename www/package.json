@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "cypress run",
-    "deploy": "serverless"
+    "deploy": "serverless --debug"
   },
   "dependencies": {
     "next": "11.1.2",
