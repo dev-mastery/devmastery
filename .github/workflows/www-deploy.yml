@@ -25,6 +25,12 @@ jobs:
         run: |
           npx start-test 3000
         working-directory: ./www
+      - name: analyse
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          npm run analyse
+        working-directory: ./www
       - name: deploy
         env:
           SLS_INTERACTIVE_SETUP_ENABLE: 1
