@@ -15,6 +15,7 @@ jobs:
           node-version: '14'
       - name: deps
         run: |
+          npm i -g @serverless/cli
           npm ci
       - name: build
         run: |
