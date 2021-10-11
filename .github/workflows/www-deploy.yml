@@ -15,11 +15,12 @@ jobs:
           node-version: '14'
       - name: deps
         run: |
+          npm i -g npm
           npm i -g @serverless/cli
-          npm i
+          npm ci
+        working-directory: ./www
       - name: build
         run: |
-          npm ci
           npm run build
         working-directory: ./www
       - name: test

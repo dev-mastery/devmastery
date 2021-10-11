@@ -10,7 +10,7 @@
     "analyze": "npm run analyse",
     "lint": "next lint",
     "test": "cypress run",
-    "deploy": "serverless-patched --debug",
+    "deploy": "serverless --debug",
     "bump": "npm version prerelease --preid alpha"
   },
   "dependencies": {
