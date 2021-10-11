@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/dev-mastery/devmastery#readme",
   "devDependencies": {
-    "@serverless/cli": "^1.5.2"
+    "@serverless/cli": "^1.5.2",
+    "@sls-next/serverless-patched": "^3.4.0"
   }
 }
