@@ -17,7 +17,14 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - name: deps
+      - name: analyse
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: ./www
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: add-dependencies
         run: |
           npm i -g npm
           npm i -g @serverless/cli
@@ -31,13 +38,6 @@ jobs:
         run: |
           npx start-test 3000
         working-directory: ./www
-      - name: analyse
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: ./www
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: deploy
         env:
           SLS_INTERACTIVE_SETUP_ENABLE: 1
