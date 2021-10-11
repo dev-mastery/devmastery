@@ -12,6 +12,8 @@ jobs:
     runs-on: "ubuntu-20.04"
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
@@ -30,12 +32,10 @@ jobs:
           npx start-test 3000
         working-directory: ./www
       - name: analyse
+        uses: SonarSource/sonarcloud-github-action@master
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm run analyse
-        working-directory: ./www
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: deploy
         env:
           SLS_INTERACTIVE_SETUP_ENABLE: 1
