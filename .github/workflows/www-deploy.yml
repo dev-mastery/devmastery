@@ -16,7 +16,6 @@ jobs:
       - name: deps
         run: |
           npm ci
-        working-directory: ./www
       - name: build
         run: |
           npm run build
