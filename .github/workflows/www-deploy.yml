@@ -1,3 +1,5 @@
+name: Deploy devmastery.com
+
 on: 
   push:
     branches:
