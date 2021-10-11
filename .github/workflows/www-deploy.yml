@@ -16,7 +16,7 @@ jobs:
       - name: deps
         run: |
           npm i -g @serverless/cli
-          npm ci
+          npm i
       - name: build
         run: |
           npm ci
