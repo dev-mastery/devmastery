@@ -1,6 +1,6 @@
 {
   "name": "www",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,7 @@
     "lint": "next lint",
     "test": "cypress run",
     "deploy": "serverless-patched --debug",
-    "version-bump": "npm version prerelease --preid alpha"
+    "bump": "npm version prerelease --preid alpha"
   },
   "dependencies": {
     "next": "11.1.2",
