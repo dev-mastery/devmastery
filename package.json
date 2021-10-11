@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/dev-mastery/devmastery/issues"
   },
-  "homepage": "https://github.com/dev-mastery/devmastery#readme"
+  "homepage": "https://github.com/dev-mastery/devmastery#readme",
+  "devDependencies": {
+    "@serverless/cli": "^1.5.2"
+  }
 }
