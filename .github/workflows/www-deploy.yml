@@ -30,6 +30,7 @@ jobs:
       - name: analyse
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm run analyse
         working-directory: ./www
