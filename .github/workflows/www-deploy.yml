@@ -27,8 +27,6 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: Gate 
         uses: sonarsource/sonarqube-quality-gate-action@master
-        with:
-          projectBaseDir: ./www
         timeout-minutes: 5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
