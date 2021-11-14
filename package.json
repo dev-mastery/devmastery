@@ -5,8 +5,9 @@
   "main": "index.js",
   "private": true,
   "workspaces": [
-    "www",
-    "packages/*"
+    "packages/common/*",
+    "packages/newsletter/*",
+    "www/*"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,5 +21,28 @@
   "bugs": {
     "url": "https://github.com/dev-mastery/devmastery/issues"
   },
-  "homepage": "https://github.com/dev-mastery/devmastery#readme"
+  "homepage": "https://github.com/dev-mastery/devmastery#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.2",
+    "@rollup/plugin-typescript": "^8.2.3",
+    "@types/faker": "^5.5.9",
+    "@types/jest": "^27.0.0",
+    "faker": "^5.5.3",
+    "jest": "^27.0.6",
+    "jest-cli": "^27.0.6",
+    "jest-watch-typeahead": "^0.6.4",
+    "rollup": "^2.53.2",
+    "rollup-jest": "^1.1.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-visualizer": "^5.5.2",
+    "ts-jest": "^27.0.3",
+    "tslib": "^2.3.0",
+    "typedoc": "^0.21.5",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@devmastery/common-domain": "file:packages/common/domain",
+    "@devmastery/newsletter-domain": "file:packages/newsletter/domain"
+  }
 }

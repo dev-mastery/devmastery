@@ -1,0 +1,15 @@
+{
+  "name": "@devmastery/newsletter-domain",
+  "version": "1.0.0-alpha.0",
+  "description": "Common Domain of DevMastery",
+  "main": "dist/index.js",
+  "private": true,
+  "workspace": true,
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "author": "Bill Sourour <bill@devmastery.com>",
+  "license": "MIT"
+}
