@@ -1,16 +1,17 @@
 import { DomainEvent, DomainEventProps } from "@devmastery/common-domain";
 import type { Subscriber } from "./Subscriber";
 
+export type UnsubscribeReason = "NOT_RELEVANT" | "NO_REASON_GIVEN";
+
 interface UnsubscribeEventData {
   subscriberId: Subscriber["id"];
+  reason?: UnsubscribeReason;
 }
 
 export interface UnsubscribeEventProps
   extends DomainEventProps<UnsubscribeEventData> {}
 
-export class UnsubscribeEvent extends DomainEvent<{
-  subscriberId: Subscriber["id"];
-}> {
+export class UnsubscribeEvent extends DomainEvent<UnsubscribeEventData> {
   public static record(data: UnsubscribeEventData) {
     return new UnsubscribeEvent({ data });
   }

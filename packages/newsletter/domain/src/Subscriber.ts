@@ -2,7 +2,6 @@ import {
   PositiveInteger,
   VerificationCode,
   Aggregate,
-  DomainEvent,
 } from "@devmastery/common-domain";
 import type {
   EmailAddress,
@@ -11,7 +10,7 @@ import type {
 } from "@devmastery/common-domain";
 import { SubscribeEvent } from "./SubscribeEvent";
 import { ConfirmationEvent } from "./ConfirmationEvent";
-import { UnsubscribeEvent } from "./UnsubscribeEvent";
+import { UnsubscribeEvent, UnsubscribeReason } from "./UnsubscribeEvent";
 
 type SubscriptionStatus = "active" | "pending" | "cancelled";
 type SubscriberEvents = Array<
@@ -23,17 +22,17 @@ interface SubscriberSnapshot {
   firstName?: NonEmptyString;
   email: EmailAddress;
   validatedEmail?: EmailAddress;
-  subscriptionStatus: SubscriptionStatus;
   version: PositiveInteger;
   verificationCode: VerificationCode;
+  unsubscribeReason?: UnsubscribeReason;
 }
 
 export class Subscriber extends Aggregate {
   #firstName?: NonEmptyString;
   #email: EmailAddress;
-  #subscriptionStatus: SubscriptionStatus = "pending";
   #validatedEmail?: EmailAddress;
   #verificationCode: VerificationCode = VerificationCode.next();
+  #unsubscribeReason?: UnsubscribeReason;
 
   public static subscribe({
     subscriberId,
@@ -84,8 +83,8 @@ export class Subscriber extends Aggregate {
     this.captureEvent(event);
   }
 
-  public unsubscribe() {
-    const event = UnsubscribeEvent.record({ subscriberId: this.id });
+  public unsubscribe({ reason }: { reason?: UnsubscribeReason } = {}) {
+    const event = UnsubscribeEvent.record({ subscriberId: this.id, reason });
     this.captureEvent(event);
   }
 
@@ -135,7 +134,6 @@ export class Subscriber extends Aggregate {
   private applySnapshot(snapshot: SubscriberSnapshot) {
     this.#firstName = snapshot.firstName;
     this.#email = snapshot.email;
-    this.#subscriptionStatus = snapshot.subscriptionStatus;
     this.#verificationCode = snapshot.verificationCode;
     this.#validatedEmail = snapshot.validatedEmail;
   }
@@ -163,8 +161,14 @@ export class Subscriber extends Aggregate {
     return this.#email;
   }
 
-  public get subscriptionStatus() {
-    return this.#subscriptionStatus;
+  public get subscriptionStatus(): SubscriptionStatus {
+    if (this.unsubscribeReason) return "cancelled";
+    if (this.validatedEmail) return "active";
+    return "pending";
+  }
+
+  public get unsubscribeReason() {
+    return this.#unsubscribeReason;
   }
 
   public get verificationCode() {
@@ -192,7 +196,6 @@ export class Subscriber extends Aggregate {
       throw Error("An existing Subscriber cannot re-subscribe.");
     }
 
-    this.#subscriptionStatus = "pending";
     this.#email = event.data.email;
     this.#firstName = event.data.firstName;
     this.#verificationCode = event.data.verificationCode;
@@ -211,12 +214,11 @@ export class Subscriber extends Aggregate {
     }
 
     this.#validatedEmail = event.data.email;
-    this.#subscriptionStatus = "active";
   }
 
   private onUnsubscribe(event: UnsubscribeEvent) {
     if (event.data.subscriberId.equals(this.id)) {
-      this.#subscriptionStatus = "cancelled";
+      this.#unsubscribeReason = event.data.reason ?? "NO_REASON_GIVEN";
     }
   }
 }

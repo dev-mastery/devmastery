@@ -83,7 +83,6 @@ describe("Subscriber", () => {
       email: original.email,
       firstName: original.firstName,
       validatedEmail: original.validatedEmail,
-      subscriptionStatus: original.subscriptionStatus,
       version: original.version,
     });
     expect(restored).toEqual(original);
