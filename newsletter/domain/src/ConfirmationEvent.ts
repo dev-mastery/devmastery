@@ -3,7 +3,6 @@ import type { Subscriber } from "./Subscriber";
 
 interface ConfirmationEventData {
   subscriberId: Subscriber["id"];
-  email: Subscriber["email"];
   verificationCode: Subscriber["verificationCode"];
 }
 interface ConfirmationEventProps

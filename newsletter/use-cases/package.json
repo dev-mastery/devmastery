@@ -11,5 +11,9 @@
     "test:watch": "jest --watch"
   },
   "author": "Bill Sourour <bill@devmastery.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.85",
+    "aws-lambda": "^1.0.7"
+  }
 }

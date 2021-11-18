@@ -1,11 +1,9 @@
 import { DomainEvent, DomainEventProps } from "@devmastery/common-domain";
 import type { Subscriber } from "./Subscriber";
 
-export type UnsubscribeReason = "NOT_RELEVANT" | "NO_REASON_GIVEN";
-
 interface UnsubscribeEventData {
   subscriberId: Subscriber["id"];
-  reason?: UnsubscribeReason;
+  reason?: Subscriber["unsubscribeReason"];
 }
 
 export interface UnsubscribeEventProps

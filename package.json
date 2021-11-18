@@ -5,8 +5,8 @@
   "main": "index.js",
   "private": true,
   "workspaces": [
-    "packages/common/*",
-    "packages/newsletter/*",
+    "common/*",
+    "newsletter/*",
     "www/*"
   ],
   "scripts": {
@@ -42,7 +42,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@devmastery/common-domain": "file:packages/common/domain",
-    "@devmastery/newsletter-domain": "file:packages/newsletter/domain"
+    "@devmastery/common-domain": "file:common/domain",
+    "@devmastery/newsletter-domain": "file:newsletter/domain"
   }
 }

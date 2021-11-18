@@ -15,6 +15,7 @@ export default {
     preserveModules: true,
     preserveModulesRoot: "src",
     sourcemap: true,
+    exports: "named",
   },
   plugins: [
     nodeResolve({

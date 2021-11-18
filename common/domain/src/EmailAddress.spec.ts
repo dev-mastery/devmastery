@@ -23,5 +23,14 @@ describe("EmailAddress", () => {
     let expected = `Your email address is: ${email}`;
     let actual = `Your email address is: ${EmailAddress.of(email)}`;
     expect(actual).toBe(expected);
+    expect(email).toBe(EmailAddress.of(email).value);
+  });
+
+  it("compares", () => {
+    let emailA = EmailAddress.of(Faker.internet.email());
+    let emailB = EmailAddress.of(Faker.internet.email());
+
+    expect(emailA.equals(emailA)).toBe(true);
+    expect(emailA.equals(emailB)).not.toBe(true);
   });
 });
