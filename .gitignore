@@ -109,3 +109,6 @@ dist
 
 #sonarqube
 .scannerwork/
+
+#bundle analyser
+bundle-analysis.html
