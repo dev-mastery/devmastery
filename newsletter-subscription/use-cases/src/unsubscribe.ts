@@ -3,7 +3,7 @@ import {
   Subscriber,
   SubscriberEvents,
   UnsubscribeReason,
-} from "@devmastery/newsletter-domain";
+} from "@devmastery/newsletter-subscription-domain";
 
 interface SubscriberEventPublisher {
   publish(events: Readonly<SubscriberEvents>): void;

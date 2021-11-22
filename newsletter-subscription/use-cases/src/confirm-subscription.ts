@@ -1,5 +1,8 @@
 import { Id, VerificationCode } from "@devmastery/common-domain";
-import { Subscriber, SubscriberEvents } from "@devmastery/newsletter-domain";
+import {
+  Subscriber,
+  SubscriberEvents,
+} from "@devmastery/newsletter-subscription-domain";
 
 interface ConfirmationInfo {
   id: string;

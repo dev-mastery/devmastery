@@ -7,3 +7,4 @@ export { Id } from "./Id";
 export { NonEmptyString } from "./NonEmptyString";
 export { PositiveInteger } from "./PositiveInteger";
 export { VerificationCode } from "./VerificationCode";
+export { Name } from "./Name";

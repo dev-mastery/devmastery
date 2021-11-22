@@ -6,7 +6,7 @@
   "private": true,
   "workspaces": [
     "common/*",
-    "newsletter/*",
+    "newsletter-subscription/*",
     "www/*"
   ],
   "scripts": {
@@ -43,6 +43,6 @@
   },
   "dependencies": {
     "@devmastery/common-domain": "file:common/domain",
-    "@devmastery/newsletter-domain": "file:newsletter/domain"
+    "@devmastery/newsletter-subscription-domain": "file:newsletter-subscription/domain"
   }
 }

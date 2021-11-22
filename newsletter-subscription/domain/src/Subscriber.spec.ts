@@ -3,67 +3,62 @@ import { Subscriber } from "./Subscriber";
 import {
   EmailAddress,
   Id,
+  Name,
   NonEmptyString,
   PositiveInteger,
   VerificationCode,
 } from "@devmastery/common-domain";
-import { SubscribeEvent } from "./SubscribeEvent";
-import { UnsubscribeEvent } from "./UnsubscribeEvent";
-import { ConfirmationEvent, FirstNameChangedEvent } from ".";
+import { SubscribedEvent } from "./SubscribedEvent";
+import { UnsubscribedEvent } from "./UnsubscribedEvent";
+import { SubscriptionConfirmedEvent } from "./SubscriptionConfirmedEvent";
+import { NameChangedEvent } from "./NameChangedEvent";
 import { UnsubscribeReason } from "./UnsubscribeReason";
 
 describe("Subscriber", () => {
-  it("subscribes with a first name and an email address", () => {
+  it("subscribes with a name and an email address", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     expect(subscriber).toBeDefined();
     expect(subscriber.email).toEqual(email);
-    expect(subscriber.firstName).toEqual(firstName);
+    expect(subscriber.name).toEqual(name);
     expect(subscriber.id).toEqual(id);
     expect(subscriber.version.value).toBe(2);
     expect(subscriber.subscriptionStatus).toBe("pending");
     expect(subscriber.verificationCode).toBeDefined();
     expect(subscriber.events.length).toBe(1);
-    expect(subscriber.events[0]).toBeInstanceOf(SubscribeEvent);
+    expect(subscriber.events[0]).toBeInstanceOf(SubscribedEvent);
   });
 
   it("subscribes with an email address only", () => {
     let id = Id.next();
-    let email = EmailAddress.of(Faker.internet.email());
 
-    let subscriber = Subscriber.of({
-      id,
-      email,
-    });
-    subscriber.subscribe();
+    let email = EmailAddress.of(Faker.internet.email());
+    let subscriber = Subscriber.subscribe({ id, email });
+
     expect(subscriber).toBeDefined();
     expect(subscriber.email).toEqual(email);
-    expect(subscriber.firstName).toBeUndefined();
+    expect(subscriber.name).toBeUndefined();
     expect(subscriber.id).toEqual(id);
     expect(subscriber.version.value).toBe(2);
     expect(subscriber.subscriptionStatus).toBe("pending");
     expect(subscriber.verificationCode).toBeDefined();
     expect(subscriber.events.length).toBe(1);
-    expect(subscriber.events[0]).toBeInstanceOf(SubscribeEvent);
+    expect(subscriber.events[0]).toBeInstanceOf(SubscribedEvent);
   });
 
   it("rescribes with the same firstName", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     expect(subscriber.subscriptionStatus).toBe("pending");
     subscriber.confirmSubscription({
       id: subscriber.id,
@@ -72,7 +67,7 @@ describe("Subscriber", () => {
     expect(subscriber.subscriptionStatus).toBe("active");
     expect(subscriber.version).toEqual(PositiveInteger.of(3));
 
-    subscriber.subscribe({ firstName });
+    subscriber.subscribe({ name });
     // version and status should remain unchanged since nothing changed.
     expect(subscriber.subscriptionStatus).toBe("active");
     expect(subscriber.version).toEqual(PositiveInteger.of(3));
@@ -80,17 +75,11 @@ describe("Subscriber", () => {
 
   it("re-subscribes with a different firstName", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    // version 1
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-
-    // version 2
-    subscriber.subscribe();
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
     expect(subscriber.subscriptionStatus).toBe("pending");
 
     // version 3
@@ -101,36 +90,55 @@ describe("Subscriber", () => {
     expect(subscriber.subscriptionStatus).toBe("active");
 
     // version 4
-    subscriber.subscribe({ firstName });
+    subscriber.subscribe({
+      name: Name.of({
+        firstName: NonEmptyString.of(Faker.name.firstName()),
+      }),
+    });
     expect(subscriber.subscriptionStatus).toBe("pending");
     expect(subscriber.version).toEqual(PositiveInteger.of(4));
   });
 
   it("changes its first name", () => {
     let id = Id.next();
-    let email = EmailAddress.of(Faker.internet.email());
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe();
-    let newFirstName = NonEmptyString.of(Faker.name.firstName());
-    subscriber.changeFirstName({ newFirstName });
-    expect(subscriber.firstName).toEqual(newFirstName);
-    expect(subscriber.events[1]).toBeInstanceOf(FirstNameChangedEvent);
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
+    let newName = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
+    });
+    subscriber.changeName({ newName });
+    expect(subscriber.name).toEqual(newName);
+    expect(subscriber.events[1]).toBeInstanceOf(NameChangedEvent);
+  });
+
+  it("does not overwrite an existing first name when re-subscribing", () => {
+    let id = Id.next();
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
+    });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
+    subscriber.confirmSubscription({
+      id,
+      verificationCode: subscriber.verificationCode,
+    });
+    subscriber.subscribe({ name: undefined });
+    expect(subscriber.name).toEqual(name);
   });
 
   it("confirms the subscription successfully", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     expect(subscriber.subscriptionStatus).toBe("pending");
 
     subscriber.confirmSubscription({
@@ -144,13 +152,12 @@ describe("Subscriber", () => {
 
   it("fails to confirm the subscription when the verification code is invalid", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     expect(subscriber.subscriptionStatus).toBe("pending");
 
     expect(() =>
@@ -163,45 +170,38 @@ describe("Subscriber", () => {
 
   it("unsubscribes with no reason", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe();
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     subscriber.unsubscribe();
     expect(subscriber.subscriptionStatus).toBe("cancelled");
-    expect(subscriber.events[1]).toBeInstanceOf(UnsubscribeEvent);
+    expect(subscriber.events[1]).toBeInstanceOf(UnsubscribedEvent);
   });
 
   it("unsubscribes with a reason", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     subscriber.unsubscribe({ reason: UnsubscribeReason.NOT_RELEVANT });
 
     expect(subscriber.subscriptionStatus).toBe("cancelled");
-    expect(subscriber.events[1]).toBeInstanceOf(UnsubscribeEvent);
+    expect(subscriber.events[1]).toBeInstanceOf(UnsubscribedEvent);
   });
 
   it("is idempotent", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
     let subscribedVersion = subscriber.version.value;
 
     subscriber.confirmSubscription({
@@ -228,14 +228,12 @@ describe("Subscriber", () => {
 
   it("recreates from history", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let original = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    original.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let original = Subscriber.subscribe({ id, name, email });
+
     original.confirmSubscription({
       id: original.id,
       verificationCode: original.verificationCode,
@@ -248,22 +246,20 @@ describe("Subscriber", () => {
 
   it("serializes to JSON", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     const asJSON = () => ({
-      id: subscriber.id.valueOf(),
-      firstName: subscriber.firstName?.valueOf(),
-      email: subscriber.email.valueOf(),
-      validatedEmail: subscriber.validatedEmail?.valueOf(),
-      subscriptionStatus: subscriber.subscriptionStatus.valueOf(),
-      version: subscriber.version.valueOf(),
-      verificationCode: subscriber.verificationCode.valueOf(),
+      id: subscriber.id.value,
+      name: subscriber.name?.value,
+      email: subscriber.email.value,
+      validatedEmail: subscriber.validatedEmail?.value,
+      subscriptionStatus: subscriber.subscriptionStatus,
+      version: subscriber.version.value,
+      verificationCode: subscriber.verificationCode.value,
     });
     expect(subscriber.toJSON()).toStrictEqual(asJSON());
 
@@ -274,31 +270,30 @@ describe("Subscriber", () => {
 
     expect(subscriber.toJSON()).toStrictEqual(asJSON());
 
-    let unnamedSubscriber = Subscriber.of({
+    let unnamedSubscriber = Subscriber.subscribe({
       id,
       email,
     });
 
     expect(unnamedSubscriber.toJSON()).toStrictEqual({
-      id: unnamedSubscriber.id.valueOf(),
-      firstName: unnamedSubscriber.firstName?.valueOf(),
+      id: unnamedSubscriber.id.value,
+      name: unnamedSubscriber.name?.value,
       email: unnamedSubscriber.email.value,
-      validatedEmail: unnamedSubscriber.validatedEmail?.valueOf(),
-      subscriptionStatus: unnamedSubscriber.subscriptionStatus.valueOf(),
-      version: unnamedSubscriber.version.valueOf(),
-      verificationCode: unnamedSubscriber.verificationCode.valueOf(),
+      validatedEmail: unnamedSubscriber.validatedEmail?.value,
+      subscriptionStatus: unnamedSubscriber.subscriptionStatus,
+      version: unnamedSubscriber.version.value,
+      verificationCode: unnamedSubscriber.verificationCode.value,
     });
   });
 
   it("prevents recreation from incomplete history", () => {
     let id = Id.next();
-    let firstName = NonEmptyString.of(Faker.name.firstName());
-    let email = EmailAddress.of(Faker.internet.email(firstName.valueOf()));
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
-    subscriber.subscribe({ firstName });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
+
     subscriber.confirmSubscription({
       id: subscriber.id,
       verificationCode: subscriber.verificationCode,
@@ -311,13 +306,13 @@ describe("Subscriber", () => {
 
   it("prevents recreation from foreign events", () => {
     let id = Id.next();
-    let email = EmailAddress.of(Faker.internet.email());
-    let subscriber = Subscriber.of({
-      id,
-      email,
+    let name = Name.of({
+      firstName: NonEmptyString.of(Faker.name.firstName()),
     });
+    let email = EmailAddress.of(Faker.internet.email(name.firstName));
+    let subscriber = Subscriber.subscribe({ id, name, email });
 
-    let event = ConfirmationEvent.record({
+    let event = SubscriptionConfirmedEvent.record({
       subscriberId: Id.next(),
       verificationCode: subscriber.verificationCode,
     });

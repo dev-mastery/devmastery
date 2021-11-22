@@ -7,7 +7,11 @@ export class NonEmptyString extends String {
   }
 
   public static isValid(value: string): boolean {
-    return Boolean(value?.length);
+    return Boolean(value?.trim().length >= NonEmptyString.MIN_LENGTH);
+  }
+
+  public static get MIN_LENGTH(): number {
+    return 1;
   }
 
   private constructor(value: string) {
@@ -16,5 +20,9 @@ export class NonEmptyString extends String {
 
   public equals(other: NonEmptyString): boolean {
     return this.valueOf() === other.valueOf();
+  }
+
+  public get value() {
+    return this.valueOf();
   }
 }

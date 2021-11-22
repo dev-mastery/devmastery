@@ -40,4 +40,8 @@ export class VerificationCode extends String {
   public equals(other: VerificationCode) {
     return this.valueOf() === other.valueOf();
   }
+
+  public get value() {
+    return this.valueOf();
+  }
 }

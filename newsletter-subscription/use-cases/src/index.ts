@@ -1,6 +1,9 @@
 import { makeSubscribe } from "./subscribe";
 import { makeConfirmSubscription } from "./confirm-subscription";
-import { SubscriberEvents, Subscriber } from "@devmastery/newsletter-domain";
+import {
+  SubscriberEvents,
+  Subscriber,
+} from "@devmastery/newsletter-subscription-domain";
 import { EmailAddress } from "@devmastery/common-domain";
 
 let publisherStub = {

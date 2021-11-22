@@ -1,5 +1,5 @@
 {
-  "name": "@devmastery/newsletter-app",
+  "name": "@devmastery/newsletter-subscription-domain",
   "version": "1.0.0-alpha.0",
   "description": "Common Domain of DevMastery",
   "main": "dist/index.js",
@@ -11,9 +11,5 @@
     "test:watch": "jest --watch"
   },
   "author": "Bill Sourour <bill@devmastery.com>",
-  "license": "MIT",
-  "dependencies": {
-    "@types/aws-lambda": "^8.10.85",
-    "aws-lambda": "^1.0.7"
-  }
+  "license": "MIT"
 }

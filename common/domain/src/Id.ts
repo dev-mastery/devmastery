@@ -1,9 +1,17 @@
-import { customAlphabet, urlAlphabet } from "nanoid";
+import { NonEmptyString } from "./NonEmptyString";
+import { PositiveInteger } from "./PositiveInteger";
+import { RandomString } from "./RandomString";
+
+const ALPHABET =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const LENGTH = 22;
 
 export class Id extends String {
   public static next(): Id {
-    const makeId = customAlphabet(Id.ALPHABET, Id.SIZE);
-    return new Id(makeId());
+    let alphabet = NonEmptyString.of(ALPHABET);
+    let length = PositiveInteger.of(LENGTH);
+    let { value } = RandomString.from({ alphabet, length });
+    return Id.of(value);
   }
 
   public static of(value: string): Id {
@@ -19,15 +27,7 @@ export class Id extends String {
   }
 
   public static get PATTERN() {
-    return /^[a-zA-Z0-9_-]{21}$/;
-  }
-
-  public static get SIZE(): number {
-    return 21;
-  }
-
-  public static get ALPHABET(): string {
-    return urlAlphabet;
+    return /^[a-zA-Z0-9]{22}$/;
   }
 
   private constructor(value: string) {
