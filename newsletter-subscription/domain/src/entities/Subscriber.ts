@@ -1,38 +1,37 @@
 import {
   VerificationCode,
-  Aggregate,
   EmailAddress,
   Id,
+  Aggregate,
   Name,
 } from "@devmastery/common-domain";
-import { SubscribedEvent } from "./SubscribedEvent";
-import { SubscriptionConfirmedEvent } from "./SubscriptionConfirmedEvent";
-import { UnsubscribedEvent } from "./UnsubscribedEvent";
+import { SubscribedEvent } from "../events/SubscribedEvent";
+import { SubscriptionConfirmedEvent } from "../events/SubscriptionConfirmedEvent";
+import { UnsubscribedEvent } from "../events/UnsubscribedEvent";
 import { UnsubscribeReason } from "./UnsubscribeReason";
-import { NameChangedEvent } from "./NameChangedEvent";
+import { NameChangedEvent } from "../events/NameChangedEvent";
+import { AggregateProps } from "@devmastery/common-domain/dist/Aggregate";
 
-export interface SubscribeCommand {
-  id: string;
-  firstName?: string;
-  email: string;
-}
-
-export type SubscriptionStatus =
-  | "active"
-  | "pending"
-  | "cancelled"
-  | "unverified";
+export type SubscriptionStatus = "none" | "pending" | "active" | "cancelled";
 export type SubscriberEvents = Array<
   SubscribedEvent | SubscriptionConfirmedEvent | UnsubscribedEvent
 >;
+export interface SubscriberProps extends AggregateProps {
+  email: EmailAddress;
+  name?: Name;
+  status?: SubscriptionStatus;
+  unsubscribeReason?: UnsubscribeReason;
+  validatedEmail?: EmailAddress;
+  verificationCode?: VerificationCode;
+}
 
 export class Subscriber extends Aggregate {
-  #name?: Name;
   #email: EmailAddress;
+  #name?: Name;
+  #subscriptionStatus: SubscriptionStatus = "none";
+  #unsubscribeReason?: UnsubscribeReason;
   #validatedEmail?: EmailAddress;
   #verificationCode: VerificationCode;
-  #unsubscribeReason?: UnsubscribeReason;
-  #subscriptionStatus: SubscriptionStatus = "pending";
 
   public static subscribe({
     id,
@@ -55,7 +54,7 @@ export class Subscriber extends Aggregate {
     events: Readonly<SubscriberEvents>;
   }) {
     if (!(events[0] instanceof SubscribedEvent)) {
-      throw new Error("The first historical event must be a SubscribedEvent");
+      throw new BadFirstEventError();
     }
 
     const id = events[0].data.subscriberId;
@@ -85,7 +84,7 @@ export class Subscriber extends Aggregate {
     }
 
     if (!verificationCode.equals(this.verificationCode)) {
-      throw new Error("Incorrect verification code.");
+      throw new WrongVerificationCodeError();
     }
 
     const event = SubscriptionConfirmedEvent.record({
@@ -103,16 +102,9 @@ export class Subscriber extends Aggregate {
     this.captureEvent(event);
   }
 
-  private constructor({
-    id,
-    email,
-    version,
-  }: {
-    id: Id;
-    email: Subscriber["email"];
-    version?: Subscriber["version"];
-  }) {
+  private constructor({ id, email, version, ...props }: SubscriberProps) {
     super({ id, version });
+
     this.#email = email;
     this.#verificationCode = VerificationCode.next();
   }
@@ -128,6 +120,7 @@ export class Subscriber extends Aggregate {
         email: this.email,
         name: props?.name,
         verificationCode: this.verificationCode,
+        version: this.version,
       });
       this.captureEvent(subscribeEvent);
     } else if (nameChanged) {
@@ -145,7 +138,7 @@ export class Subscriber extends Aggregate {
     if (!eventHappenedHere) throw new ForeignEventError();
 
     if (event instanceof SubscribedEvent) {
-      this.applySubscribe(event);
+      this.applySubscribed(event);
     }
     if (event instanceof SubscriptionConfirmedEvent) {
       this.applyConfirmation(event);
@@ -187,7 +180,7 @@ export class Subscriber extends Aggregate {
   public toJSON() {
     return {
       id: this.id.value,
-      name: this.name?.value,
+      name: this.name?.toJSON(),
       email: this.email.value,
       validatedEmail: this.validatedEmail?.value,
       subscriptionStatus: this.subscriptionStatus,
@@ -196,7 +189,7 @@ export class Subscriber extends Aggregate {
     };
   }
 
-  private applySubscribe(event: SubscribedEvent) {
+  private applySubscribed(event: SubscribedEvent) {
     this.#email = event.data.email;
     this.#verificationCode = event.data.verificationCode;
     this.#name = event.data.name;
@@ -221,9 +214,23 @@ export class Subscriber extends Aggregate {
   }
 }
 
-class ForeignEventError extends RangeError {
+export class ForeignEventError extends RangeError {
   constructor() {
     super("Event occurred on a different subscriber.");
     this.name = "ForeignEventError";
+  }
+}
+
+export class WrongVerificationCodeError extends RangeError {
+  constructor() {
+    super("Incorrect verification code.");
+    this.name = "WrongVerificationCodeError";
+  }
+}
+
+export class BadFirstEventError extends RangeError {
+  constructor() {
+    super("The first historical event must be a SubscribedEvent");
+    this.name = "BadFirstEventError";
   }
 }

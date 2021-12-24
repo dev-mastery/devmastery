@@ -1,7 +1,10 @@
 export class NonEmptyString extends String {
-  public static of(value: string): NonEmptyString {
+  public static of(
+    value: string,
+    options?: { label?: string }
+  ): NonEmptyString {
     if (!NonEmptyString.isValid(value)) {
-      throw new TypeError("Value cannot be null or empty.");
+      throw new EmptyStringError(options?.label);
     }
     return new NonEmptyString(value);
   }
@@ -24,5 +27,11 @@ export class NonEmptyString extends String {
 
   public get value() {
     return this.valueOf();
+  }
+}
+
+export class EmptyStringError extends TypeError {
+  constructor(label: string = "Value") {
+    super(`${label} cannot be null or empty.`);
   }
 }

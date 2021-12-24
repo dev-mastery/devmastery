@@ -1,10 +1,14 @@
-export type { AggregateProps } from "./Aggregate";
-export type { DomainEventProps } from "./DomainEvent";
 export { Aggregate } from "./Aggregate";
+export type { AggregateProps } from "./Aggregate";
+export { ApplicationError } from "./ApplicationError";
+export type { DomainEventProps } from "./DomainEvent";
 export { DomainEvent } from "./DomainEvent";
 export { EmailAddress } from "./EmailAddress";
 export { Id } from "./Id";
+export { FirstName } from "./FirstName";
+export { Name } from "./Name";
 export { NonEmptyString } from "./NonEmptyString";
 export { PositiveInteger } from "./PositiveInteger";
+export { RandomString } from "./RandomString";
 export { VerificationCode } from "./VerificationCode";
-export { Name } from "./Name";
+export { Version } from "./Version";

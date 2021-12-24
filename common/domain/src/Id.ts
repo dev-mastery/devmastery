@@ -4,7 +4,8 @@ import { RandomString } from "./RandomString";
 
 const ALPHABET =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const LENGTH = 22;
+const LENGTH = 24;
+const PATTERN = new RegExp(`^[${ALPHABET}]{${LENGTH}}$`);
 
 export class Id extends String {
   public static next(): Id {
@@ -26,8 +27,8 @@ export class Id extends String {
     return Id.PATTERN.test(value);
   }
 
-  public static get PATTERN() {
-    return /^[a-zA-Z0-9]{22}$/;
+  public static get PATTERN(): RegExp {
+    return PATTERN;
   }
 
   private constructor(value: string) {
@@ -35,11 +36,7 @@ export class Id extends String {
   }
 
   public equals(other: Id) {
-    return this.valueOf() === other.valueOf();
-  }
-
-  public toJSON(): string {
-    return this.toString();
+    return this.value === other.value;
   }
 
   public get value() {

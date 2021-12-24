@@ -1,20 +1,20 @@
 import { DomainEvent } from "./DomainEvent";
 import { Id } from "./Id";
-import { PositiveInteger } from "./PositiveInteger";
+import { Version } from "./Version";
 
 export interface AggregateProps {
   id: Id;
-  version?: PositiveInteger;
+  version?: Version;
 }
 
 export abstract class Aggregate {
   #id: Id;
-  #version: PositiveInteger;
+  #version: Version;
   #events: Array<DomainEvent<any>> = [];
 
   protected constructor(props: AggregateProps) {
     this.#id = props.id;
-    this.#version = props.version ?? PositiveInteger.of(1);
+    this.#version = props.version ?? Version.init();
   }
 
   protected captureEvent(event: DomainEvent<any>) {
@@ -23,16 +23,20 @@ export abstract class Aggregate {
   }
 
   protected incrementVersion() {
-    this.#version = this.#version.plus(PositiveInteger.of(1));
+    this.#version = this.#version.next();
   }
 
   protected abstract applyEvent(event: DomainEvent<any>): void;
+
+  public equals(other: Aggregate): boolean {
+    return this.id.equals(other.id);
+  }
 
   public get id(): Id {
     return this.#id;
   }
 
-  public get version(): PositiveInteger {
+  public get version(): Version {
     return this.#version;
   }
 

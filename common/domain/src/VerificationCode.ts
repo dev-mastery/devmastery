@@ -1,36 +1,34 @@
-import { customAlphabet } from "nanoid";
+import { ApplicationError } from "./ApplicationError";
+import { NonEmptyString } from "./NonEmptyString";
+import { PositiveInteger } from "./PositiveInteger";
+import { RandomString } from "./RandomString";
+
+const ALPHABET = "0123456789";
+const LENGTH = 6;
+const PATTERN = new RegExp(`^[${ALPHABET}]{${LENGTH}}$`);
 
 export class VerificationCode extends String {
-  public static next() {
-    const generateCode = customAlphabet(VerificationCode.ALPHABET, 6);
-    const code = generateCode();
-    return new VerificationCode(code);
+  public static next(): VerificationCode {
+    let alphabet = NonEmptyString.of(ALPHABET);
+    let length = PositiveInteger.of(LENGTH);
+    let { value } = RandomString.from({ alphabet, length });
+    return VerificationCode.of(value);
   }
 
-  public static of(value: string | number) {
-    const code = value.toString().trim();
-    VerificationCode.validate(code);
-    return new VerificationCode(code);
-  }
-
-  private static validate(value: unknown) {
-    if (typeof value !== "string" || !VerificationCode.isValid(value)) {
-      throw new TypeError(
-        "Value must be a string containing exactly six digits."
-      );
+  public static of(value: string): VerificationCode {
+    if (!VerificationCode.isValid(value)) {
+      throw new InvalidVerificationCodeError(value);
     }
+
+    return new VerificationCode(value);
   }
 
-  public static isValid(value: string) {
+  public static isValid(value: string): boolean {
     return VerificationCode.PATTERN.test(value);
   }
 
-  public static get ALPHABET() {
-    return "0123456789";
-  }
-
   public static get PATTERN() {
-    return /^\d{6}$/;
+    return PATTERN;
   }
 
   private constructor(value: string) {
@@ -38,10 +36,16 @@ export class VerificationCode extends String {
   }
 
   public equals(other: VerificationCode) {
-    return this.valueOf() === other.valueOf();
+    return this.value === other.value;
   }
 
   public get value() {
     return this.valueOf();
+  }
+}
+
+export class InvalidVerificationCodeError extends ApplicationError {
+  public constructor(value: string) {
+    super(`Malformed Verification Code: ${value}.`);
   }
 }

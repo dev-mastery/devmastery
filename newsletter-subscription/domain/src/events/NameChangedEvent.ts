@@ -1,18 +1,33 @@
-import { DomainEvent } from "@devmastery/common-domain";
-import type { DomainEventProps } from "@devmastery/common-domain";
+import {
+  DomainEvent,
+  DomainEventProps,
+  Id,
+  PositiveInteger,
+} from "@devmastery/common-domain";
 import type { Subscriber } from "./Subscriber";
 
 export interface NameChangedEventData {
   subscriberId: Subscriber["id"];
   newName: Subscriber["name"];
+  version: Subscriber["version"];
 }
 
-interface NameChangedEventProps
+export interface NameChangedEventProps
   extends DomainEventProps<NameChangedEventData> {}
 
 export class NameChangedEvent extends DomainEvent<NameChangedEventData> {
   public static record(data: NameChangedEventData) {
-    return new NameChangedEvent({ data });
+    let aggregateId = data.subscriberId;
+    let eventId = Id.next();
+    let occurredAt = new Date();
+    let ordinal = PositiveInteger.of(data.version);
+    return new NameChangedEvent({
+      aggregateId,
+      data,
+      eventId,
+      occurredAt,
+      ordinal,
+    });
   }
 
   public static of(props: NameChangedEventProps) {

@@ -27,7 +27,7 @@ export class UnsubscribeReason {
   }
 
   static get VALID_REASONS() {
-    return ["NOT_RELEVANT", "NO_REASON_GIVEN"] as const;
+    return ["NOT_RELEVANT", "NO_REASON_GIVEN", "DUPLICATE"] as const;
   }
 
   constructor(id: UnsubscribeReasonId) {

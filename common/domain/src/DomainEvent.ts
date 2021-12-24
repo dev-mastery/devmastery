@@ -1,48 +1,64 @@
+import { Aggregate } from "./Aggregate";
 import { Id } from "./Id";
-import { NonEmptyString } from "./NonEmptyString";
 
-export interface DomainEventProps<TData> {
-  id?: Id;
-  name?: NonEmptyString;
+export interface DomainEventProps<
+  TPayload extends Record<string, any> = Record<string, any>
+> {
+  aggregateId: Aggregate["id"];
+  aggregateVersion: Aggregate["version"];
+  payload: TPayload;
+  eventId?: Id;
   occurredAt?: Date;
-  data: TData;
 }
 
-export abstract class DomainEvent<TData> {
-  #id: Id;
-  #name: NonEmptyString;
+export abstract class DomainEvent<
+  TPayload extends Record<string, any> = Record<string, any>
+> {
+  #aggregateId: Aggregate["id"];
+  #aggregateVersion: Aggregate["version"];
+  #payload: TPayload;
+  #eventId: Id;
   #occurredAt: Date;
-  #data: TData;
 
-  protected constructor(props: DomainEventProps<TData>) {
-    this.#name = props.name ?? NonEmptyString.of(this.constructor.name);
-    this.#data = props.data;
+  protected constructor(props: DomainEventProps<TPayload>) {
+    this.#aggregateId = props.aggregateId;
+    this.#aggregateVersion = props.aggregateVersion;
+    this.#payload = props.payload;
+    this.#eventId = props.eventId ?? Id.next();
     this.#occurredAt = props.occurredAt ?? new Date();
-    this.#id = props.id ?? Id.next();
   }
 
   public toJSON() {
     return {
-      id: this.id,
-      name: this.name,
-      data: this.data,
-      occurredAt: Date.parse(this.occurredAt.toUTCString()),
+      eventId: this.eventId.value,
+      aggregateId: this.aggregateId.value,
+      payload: this.payload.toJSON ? this.payload.toJSON() : this.payload,
+      aggregateVersion: this.aggregateVersion.value,
+      occurredAt: this.occurredAt.toISOString(),
     };
   }
 
-  public get id() {
-    return this.#id;
+  public equals(other: DomainEvent<TPayload>): boolean {
+    return this.eventId === other.eventId;
   }
 
-  public get name() {
-    return this.#name;
+  get aggregateVersion() {
+    return this.#aggregateVersion;
   }
 
-  public get occurredAt() {
+  get payload(): TPayload {
+    return this.#payload;
+  }
+
+  get occurredAt(): Date {
     return this.#occurredAt;
   }
 
-  public get data() {
-    return this.#data;
+  get aggregateId(): Aggregate["id"] {
+    return this.#aggregateId;
+  }
+
+  get eventId(): Id {
+    return this.#eventId;
   }
 }

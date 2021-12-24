@@ -13,8 +13,8 @@ interface SubscriberEventPublisher {
   publish(events: Readonly<SubscriberEvents>): Promise<void>;
 }
 
-interface SubscriberRepo {
-  findByEmail(email: EmailAddress): Promise<Subscriber>;
+interface SubscriberEventsRepo {
+  findByAttributes(attrs: { email: EmailAddress }): Promise<Subscriber>;
 }
 
 export interface SubscribeCommand {
@@ -28,18 +28,18 @@ export function makeSubscribe({
   repo,
 }: {
   publisher: SubscriberEventPublisher;
-  repo: SubscriberRepo;
+  repo: SubscriberEventsRepo;
 }) {
-  return async function subscribe(command: SubscribeCommand) {
+  return async function subscribe(sub: SubscribeCommand) {
     let subscriber;
-    let email = EmailAddress.of(command.email);
-    let existingSubscriber = await repo.findByEmail(email);
+    let email = EmailAddress.of(sub.email);
+    let existingSubscriber = await repo.findByAttributes({ email });
 
     if (existingSubscriber) {
       subscriber = existingSubscriber;
     } else {
-      let id = Id.of(command.id);
-      let name = extractName(command);
+      let id = Id.of(sub.id);
+      let name = extractName(sub);
       subscriber = Subscriber.subscribe({ id, name, email });
     }
 
@@ -47,10 +47,10 @@ export function makeSubscribe({
   };
 }
 
-function extractName(command: SubscribeCommand) {
+function extractName(sub: SubscribeCommand) {
   let name;
-  if (command.firstName) {
-    let firstName = NonEmptyString.of(command.firstName);
+  if (sub.firstName) {
+    let firstName = NonEmptyString.of(sub.firstName);
     name = Name.fromFirstName(firstName);
   }
   return name;

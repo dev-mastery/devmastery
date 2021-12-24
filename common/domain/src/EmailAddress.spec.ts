@@ -33,4 +33,11 @@ describe("EmailAddress", () => {
     expect(emailA.equals(emailA)).toBe(true);
     expect(emailA.equals(emailB)).not.toBe(true);
   });
+
+  it("serializes to JSON", () => {
+    let email = EmailAddress.of(Faker.internet.email());
+    let expected = `"${email.value}"`;
+    let actual = JSON.stringify(email);
+    expect(actual).toBe(expected);
+  });
 });

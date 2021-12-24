@@ -1,6 +1,6 @@
-export { SubscribedEvent } from "./SubscribedEvent";
+export { SubscribedEvent } from "./events/SubscribedEvent";
 export { UnsubscribedEvent } from "./UnsubscribedEvent";
-export { UnsubscribeReason } from "./UnsubscribeReason";
+export { UnsubscribeReason } from "./entities/UnsubscribeReason";
 export { SubscriptionConfirmedEvent } from "./SubscriptionConfirmedEvent";
 export { Subscriber } from "./Subscriber";
 export { NameChangedEvent } from "./NameChangedEvent";

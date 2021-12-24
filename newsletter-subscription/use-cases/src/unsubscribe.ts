@@ -10,10 +10,10 @@ interface SubscriberEventPublisher {
 }
 
 interface SubscriberRepo {
-  getSubscriber({ id }: { id: Subscriber["id"] }): Subscriber;
+  getSubscriber(id: Subscriber["id"]): Promise<Subscriber>;
 }
 
-interface UnsubscribeInfo {
+interface UnsubscribeCommand {
   id: string;
   reason?: string;
 }
@@ -25,11 +25,12 @@ export function makeUnsubscribe({
   publisher: SubscriberEventPublisher;
   repo: SubscriberRepo;
 }) {
-  return function unsubscribe(info: UnsubscribeInfo) {
-    let subscriber = repo.getSubscriber({ id: Id.of(info.id) });
+  return async function unsubscribe(unsub: UnsubscribeCommand) {
+    let id = Id.of(unsub.id);
+    let subscriber = await repo.getSubscriber(id);
     let reason;
-    if (info.reason) {
-      reason = UnsubscribeReason.parse(info.reason);
+    if (unsub.reason) {
+      reason = UnsubscribeReason.parse(unsub.reason);
     }
     subscriber.unsubscribe({ reason });
     publisher.publish(subscriber.events);

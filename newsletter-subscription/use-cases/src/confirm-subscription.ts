@@ -4,7 +4,7 @@ import {
   SubscriberEvents,
 } from "@devmastery/newsletter-subscription-domain";
 
-interface ConfirmationInfo {
+interface ConfirmCommand {
   id: string;
   verificationCode: string;
 }
@@ -13,8 +13,8 @@ interface SubscriberEventPublisher {
   publish(events: Readonly<SubscriberEvents>): void;
 }
 
-interface SubscriberRepo {
-  getSubscriber({ id }: { id: Subscriber["id"] }): Subscriber;
+interface SubscriberEventsRepo {
+  getSubscriber(id: Subscriber["id"]): Promise<Subscriber>;
 }
 
 export function makeConfirmSubscription({
@@ -22,13 +22,13 @@ export function makeConfirmSubscription({
   repo,
 }: {
   publisher: SubscriberEventPublisher;
-  repo: SubscriberRepo;
+  repo: SubscriberEventsRepo;
 }) {
-  return function confirmSubscription(info: ConfirmationInfo) {
-    let id = Id.of(info.id);
-    let verificationCode = VerificationCode.of(info.verificationCode);
+  return async function confirmSubscription(confirm: ConfirmCommand) {
+    let id = Id.of(confirm.id);
+    let verificationCode = VerificationCode.of(confirm.verificationCode);
 
-    let subscriber = repo.getSubscriber({ id });
+    let subscriber = await repo.getSubscriber(id);
     subscriber.confirmSubscription({ id, verificationCode });
     publisher.publish(subscriber.events);
   };
