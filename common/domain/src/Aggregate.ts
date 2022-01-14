@@ -20,6 +20,7 @@ export abstract class Aggregate {
   protected captureEvent(event: DomainEvent<any>) {
     this.applyEvent(event);
     this.#events.push(event);
+    this.incrementVersion();
   }
 
   protected incrementVersion() {
