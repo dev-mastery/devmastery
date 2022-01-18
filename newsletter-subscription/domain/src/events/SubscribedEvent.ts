@@ -1,12 +1,7 @@
-import {
-  Id,
-  DomainEvent,
-  PositiveInteger,
-  DomainEventProps,
-} from "@devmastery/common-domain";
-import type { Subscriber } from "./Subscriber";
+import { Id, DomainEvent, DomainEventProps } from "@devmastery/common-domain";
+import type { Subscriber } from "../entities/Subscriber";
 
-export interface SubscribedEventData {
+export interface SubscribedEventdata {
   subscriberId: Subscriber["id"];
   email: Subscriber["email"];
   name?: Subscriber["name"];
@@ -15,20 +10,20 @@ export interface SubscribedEventData {
 }
 
 export interface SubscribedEventProps
-  extends DomainEventProps<SubscribedEventData> {}
+  extends DomainEventProps<SubscribedEventdata> {}
 
-export class SubscribedEvent extends DomainEvent<SubscribedEventData> {
-  public static record(data: SubscribedEventData) {
+export class SubscribedEvent extends DomainEvent<SubscribedEventdata> {
+  public static record(data: SubscribedEventdata) {
     let aggregateId = data.subscriberId;
     let eventId = Id.next();
     let occurredAt = new Date();
-    let ordinal = PositiveInteger.of(data.version);
+    let aggregateVersion = data.version;
     return new SubscribedEvent({
       aggregateId,
+      aggregateVersion,
       data,
       eventId,
       occurredAt,
-      ordinal,
     });
   }
 

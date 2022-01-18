@@ -1,3 +1,5 @@
+import { ApplicationError } from "./ApplicationError";
+
 export class NonEmptyString extends String {
   public static of(
     value: string,
@@ -30,8 +32,11 @@ export class NonEmptyString extends String {
   }
 }
 
-export class EmptyStringError extends TypeError {
+export class EmptyStringError extends ApplicationError {
   constructor(label: string = "Value") {
-    super(`${label} cannot be null or empty.`);
+    super({
+      message: NonEmptyString.of(`${label} cannot be null or empty.`),
+      name: NonEmptyString.of("EmptyStringError"),
+    });
   }
 }

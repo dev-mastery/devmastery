@@ -3,14 +3,16 @@ import {
   EmailAddress,
   Id,
   Aggregate,
+  AggregateProps,
   Name,
+  ApplicationError,
+  NonEmptyString,
 } from "@devmastery/common-domain";
 import { SubscribedEvent } from "../events/SubscribedEvent";
 import { SubscriptionConfirmedEvent } from "../events/SubscriptionConfirmedEvent";
 import { UnsubscribedEvent } from "../events/UnsubscribedEvent";
 import { UnsubscribeReason } from "./UnsubscribeReason";
 import { NameChangedEvent } from "../events/NameChangedEvent";
-import { AggregateProps } from "@devmastery/common-domain/dist/Aggregate";
 
 export type SubscriptionStatus = "none" | "pending" | "active" | "cancelled";
 export type SubscriberEvents = Array<
@@ -60,7 +62,10 @@ export class Subscriber extends Aggregate {
     const id = events[0].data.subscriberId;
     const email = events[0].data.email;
     const subscriber = new Subscriber({ id, email });
-    events.forEach((event) => subscriber.applyEvent(event));
+    events.forEach((event) => {
+      subscriber.applyEvent(event);
+      subscriber.incrementVersion();
+    });
     return subscriber;
   }
 
@@ -98,6 +103,7 @@ export class Subscriber extends Aggregate {
     const event = NameChangedEvent.record({
       subscriberId: this.id,
       newName,
+      version: this.version,
     });
     this.captureEvent(event);
   }
@@ -128,6 +134,7 @@ export class Subscriber extends Aggregate {
         NameChangedEvent.record({
           subscriberId: this.id,
           newName: props?.name,
+          version: this.version,
         })
       );
     }
@@ -149,8 +156,6 @@ export class Subscriber extends Aggregate {
     if (event instanceof NameChangedEvent) {
       this.onFirstNameChanged(event);
     }
-
-    this.incrementVersion();
   }
 
   public get name() {
@@ -214,23 +219,31 @@ export class Subscriber extends Aggregate {
   }
 }
 
-export class ForeignEventError extends RangeError {
+export class ForeignEventError extends ApplicationError {
   constructor() {
-    super("Event occurred on a different subscriber.");
-    this.name = "ForeignEventError";
+    super({
+      message: NonEmptyString.of("Event occurred on a different subscriber."),
+      name: NonEmptyString.of("ForeignEventError"),
+    });
   }
 }
 
-export class WrongVerificationCodeError extends RangeError {
+export class WrongVerificationCodeError extends ApplicationError {
   constructor() {
-    super("Incorrect verification code.");
-    this.name = "WrongVerificationCodeError";
+    super({
+      message: NonEmptyString.of("Incorrect verification code."),
+      name: NonEmptyString.of("WrongVerificationCodeError"),
+    });
   }
 }
 
-export class BadFirstEventError extends RangeError {
+export class BadFirstEventError extends ApplicationError {
   constructor() {
-    super("The first historical event must be a SubscribedEvent");
-    this.name = "BadFirstEventError";
+    super({
+      message: NonEmptyString.of(
+        "The first historical event must be a SubscribedEvent"
+      ),
+      name: NonEmptyString.of("BadFirstEventError"),
+    });
   }
 }

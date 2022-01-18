@@ -24,4 +24,14 @@ export class Name extends String {
   public get value(): string {
     return this.valueOf();
   }
+
+  public equals(other: Name): boolean {
+    return this.valueOf() === other.valueOf();
+  }
+
+  public toJSON() {
+    return {
+      firstName: this.firstName,
+    };
+  }
 }

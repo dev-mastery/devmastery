@@ -1,13 +1,20 @@
+import { NonEmptyString } from "./NonEmptyString";
+
+export interface ApplicationErrorProps {
+  message: NonEmptyString;
+  name: NonEmptyString;
+}
+
 export class ApplicationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = this.constructor.name;
+  constructor({ message, name }: ApplicationErrorProps) {
+    super(message.toString());
+    this.name = name.toString();
     Error.captureStackTrace(this, this.constructor);
   }
   toJSON() {
     return {
-      name: this.name,
-      message: this.message,
+      name: this.name.toString(),
+      message: this.message.toString(),
     };
   }
 }

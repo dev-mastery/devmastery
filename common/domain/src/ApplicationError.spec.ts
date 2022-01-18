@@ -1,27 +1,29 @@
 import { ApplicationError } from "./ApplicationError";
 import * as Faker from "faker";
-class ApplicationErrorMock extends ApplicationError {
-  constructor(message: string) {
-    super(message);
-  }
-}
+import { NonEmptyString } from "./NonEmptyString";
 
 describe("Application Error", () => {
-  it("is named after its constructor", () => {
-    const error = new ApplicationErrorMock("");
-    expect(error.name).toBe("ApplicationErrorMock");
+  it("has a name", () => {
+    const errorName = NonEmptyString.of(Faker.lorem.word());
+    const error = new ApplicationError({
+      name: errorName,
+      message: NonEmptyString.of("Appl"),
+    });
+    expect(error.name).toBe(errorName.toString());
   });
   it("has a message", () => {
-    const message = Faker.lorem.sentence();
-    const error = new ApplicationErrorMock(message);
-    expect(error.message).toBe(message);
+    const errorName = NonEmptyString.of(Faker.lorem.word());
+    const message = NonEmptyString.of(Faker.lorem.sentence());
+    const error = new ApplicationError({ name: errorName, message });
+    expect(error.message).toBe(message.toString());
   });
   it("serializes to JSON", () => {
-    const message = Faker.lorem.sentence();
-    const error = new ApplicationErrorMock(message);
+    const message = NonEmptyString.of(Faker.lorem.sentence());
+    const errorName = NonEmptyString.of(Faker.lorem.word());
+    const error = new ApplicationError({ message, name: errorName });
     let errJson = {
-      name: "ApplicationErrorMock",
-      message: message,
+      name: errorName.toString(),
+      message: message.toString(),
     };
     expect(error.toJSON()).toEqual(errJson);
     expect(JSON.stringify(error)).toBe(JSON.stringify(errJson));

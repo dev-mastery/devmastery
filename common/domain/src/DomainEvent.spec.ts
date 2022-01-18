@@ -13,14 +13,14 @@ describe("DomainEvent", () => {
     const props: DomainEventProps = {
       aggregateId: Id.next(),
       aggregateVersion: Version.init(),
-      payload: {},
+      data: {},
       eventId: Id.next(),
       occurredAt: new Date(),
     };
     const event = new DomainEventMock(props);
     expect(event.aggregateId).toBe(props.aggregateId);
     expect(event.aggregateVersion).toBe(props.aggregateVersion);
-    expect(event.payload).toBe(props.payload);
+    expect(event.data).toBe(props.data);
     expect(event.eventId).toBe(props.eventId);
     expect(event.occurredAt).toBe(props.occurredAt);
   });
@@ -28,7 +28,7 @@ describe("DomainEvent", () => {
     const props: DomainEventProps = {
       aggregateId: Id.next(),
       aggregateVersion: Version.init(),
-      payload: {
+      data: {
         foo: "bar",
         num: 123,
       },
@@ -39,7 +39,7 @@ describe("DomainEvent", () => {
     expect(event.toJSON()).toEqual({
       aggregateId: props.aggregateId.toString(),
       aggregateVersion: props.aggregateVersion.valueOf(),
-      payload: props.payload,
+      data: props.data,
       eventId: props.eventId.toString(),
       occurredAt: props.occurredAt.toISOString(),
     });
@@ -48,7 +48,7 @@ describe("DomainEvent", () => {
     const event = new DomainEventMock({
       aggregateId: Id.next(),
       aggregateVersion: Version.of(1),
-      payload: {},
+      data: {},
     });
     expect(event.eventId).toBeDefined();
     expect(event.eventId instanceof Id).toBe(true);
@@ -57,7 +57,7 @@ describe("DomainEvent", () => {
     const event = new DomainEventMock({
       aggregateId: Id.next(),
       aggregateVersion: Version.of(1),
-      payload: {},
+      data: {},
     });
     expect(event.occurredAt).toBeDefined();
     expect(event.occurredAt instanceof Date).toBe(true);
@@ -68,13 +68,13 @@ describe("DomainEvent", () => {
       eventId: id,
       aggregateId: Id.next(),
       aggregateVersion: Version.of(1),
-      payload: {},
+      data: {},
     });
     const event2 = new DomainEventMock({
       eventId: id,
       aggregateId: Id.next(),
       aggregateVersion: Version.of(1),
-      payload: {},
+      data: {},
     });
     expect(event1.equals(event2)).toBe(true);
   });

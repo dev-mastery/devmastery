@@ -1,3 +1,4 @@
+import { NonEmptyString } from ".";
 import { ApplicationError } from "./ApplicationError";
 
 export class Version extends Number {
@@ -39,7 +40,9 @@ export class Version extends Number {
 
 export class VersionOutOfBoundsError extends ApplicationError {
   constructor() {
-    super("Version must be greater than 0.");
-    this.name = "VersionOutOfBoundsError";
+    super({
+      message: NonEmptyString.of("Version must be greater than 0."),
+      name: NonEmptyString.of("VersionOutOfBoundsError"),
+    });
   }
 }
