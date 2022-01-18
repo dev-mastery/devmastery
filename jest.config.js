@@ -7,5 +7,4 @@ module.exports = {
       useESM: true,
     },
   },
-  testPathIgnorePatterns: ["<rootDir>/www/cypress/"],"projects": "<rootDir>/packages/seedwork"
 };

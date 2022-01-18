@@ -12,7 +12,6 @@ class TestAggregate extends Aggregate {
 
   public doSomething(event: DomainEvent<any>): void {
     this.captureEvent(event);
-    this.incrementVersion();
   }
 }
 

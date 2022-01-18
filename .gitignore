@@ -112,3 +112,6 @@ dist
 
 #bundle analyser
 bundle-analysis.html
+
+# TurboRepo
+.turbo

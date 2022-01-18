@@ -2,28 +2,28 @@ import { Aggregate } from "./Aggregate";
 import { Id } from "./Id";
 
 export interface DomainEventProps<
-  TPayload extends Record<string, any> = Record<string, any>
+  Tdata extends Record<string, any> = Record<string, any>
 > {
   aggregateId: Aggregate["id"];
   aggregateVersion: Aggregate["version"];
-  payload: TPayload;
+  data: Tdata;
   eventId?: Id;
   occurredAt?: Date;
 }
 
 export abstract class DomainEvent<
-  TPayload extends Record<string, any> = Record<string, any>
+  Tdata extends Record<string, any> = Record<string, any>
 > {
   #aggregateId: Aggregate["id"];
   #aggregateVersion: Aggregate["version"];
-  #payload: TPayload;
+  #data: Tdata;
   #eventId: Id;
   #occurredAt: Date;
 
-  protected constructor(props: DomainEventProps<TPayload>) {
+  protected constructor(props: DomainEventProps<Tdata>) {
     this.#aggregateId = props.aggregateId;
     this.#aggregateVersion = props.aggregateVersion;
-    this.#payload = props.payload;
+    this.#data = props.data;
     this.#eventId = props.eventId ?? Id.next();
     this.#occurredAt = props.occurredAt ?? new Date();
   }
@@ -32,13 +32,13 @@ export abstract class DomainEvent<
     return {
       eventId: this.eventId.value,
       aggregateId: this.aggregateId.value,
-      payload: this.payload.toJSON ? this.payload.toJSON() : this.payload,
+      data: this.data.toJSON ? this.data.toJSON() : this.data,
       aggregateVersion: this.aggregateVersion.value,
       occurredAt: this.occurredAt.toISOString(),
     };
   }
 
-  public equals(other: DomainEvent<TPayload>): boolean {
+  public equals(other: DomainEvent<Tdata>): boolean {
     return this.eventId === other.eventId;
   }
 
@@ -46,8 +46,8 @@ export abstract class DomainEvent<
     return this.#aggregateVersion;
   }
 
-  get payload(): TPayload {
-    return this.#payload;
+  get data(): Tdata {
+    return this.#data;
   }
 
   get occurredAt(): Date {

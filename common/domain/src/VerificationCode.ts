@@ -46,6 +46,9 @@ export class VerificationCode extends String {
 
 export class InvalidVerificationCodeError extends ApplicationError {
   public constructor(value: string) {
-    super(`Malformed Verification Code: ${value}.`);
+    super({
+      message: NonEmptyString.of(`Malformed Verification Code: ${value}.`),
+      name: NonEmptyString.of("InvalidVerificationCodeError"),
+    });
   }
 }

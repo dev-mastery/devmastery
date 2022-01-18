@@ -1,4 +1,5 @@
 import { ApplicationError } from "./ApplicationError";
+import { NonEmptyString } from "./NonEmptyString";
 import { Validated } from "./ValidationResult";
 
 export class FirstName extends String {
@@ -44,20 +45,29 @@ export class FirstName extends String {
 
 export class FirstNameTooShortError extends ApplicationError {
   public constructor() {
-    super(
-      `First name must be at least ${FirstName.MIN_LENGTH} characters long.`
-    );
+    super({
+      message: NonEmptyString.of(
+        `First name must be at least ${FirstName.MIN_LENGTH} characters long.`
+      ),
+      name: NonEmptyString.of("FirstNameTooShortError"),
+    });
   }
 }
 
 export class FirstNameNullOrUndefinedError extends ApplicationError {
   public constructor() {
-    super(`First name cannot be null or undefined.`);
+    super({
+      message: NonEmptyString.of(`First name cannot be null or undefined.`),
+      name: NonEmptyString.of("FirstNameNullOrUndefinedError"),
+    });
   }
 }
 
 export class FirstNameEmptyError extends ApplicationError {
   public constructor() {
-    super(`First name cannot be blank.`);
+    super({
+      message: NonEmptyString.of(`First name cannot be blank.`),
+      name: NonEmptyString.of("FirstNameEmptyError"),
+    });
   }
 }
