@@ -1,0 +1,27 @@
+{
+  "name": "@devmastery/newsletter-subscription-ui",
+  "version": "1.0.0",
+  "description": "UI Components for the Newsletter Subscription Feature",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-3-Clause",
+  "peerDependencies": {
+    "@types/react": "^17.0.24",
+    "@types/react-dom": "^17.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "remix": "^1.1.1",
+    "typescript": "^4.1.2"
+  },
+  "devDependencies": {
+    "remix": "^1.1.1"
+  }
+}

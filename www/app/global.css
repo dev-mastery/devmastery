@@ -1,0 +1,11 @@
+html {
+  --text-color: #0f172a;
+  --background-color: #f8fafc;
+
+
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  min-height: 100vh;
+  display: block;
+}

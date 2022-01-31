@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "lib": ["esnext"],
+    "target": "ES2019",
+    "lib": ["ES2019"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
