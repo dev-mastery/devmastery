@@ -20,7 +20,7 @@ module "rds-aurora" {
   create_security_group = true
   allowed_cidr_blocks   = var.is_database_public ? ["0.0.0.0/0"] : module.vpc.private_subnets_cidr_blocks
   publicly_accessible   = var.is_database_public
-  monitoring_interval   = 120
+  monitoring_interval   = 60
 
   apply_immediately   = var.db_apply_immediately
   skip_final_snapshot = true
