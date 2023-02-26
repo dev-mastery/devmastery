@@ -1,13 +1,17 @@
+###############################################################################
+# VPC AND SUBNETS
+###############################################################################
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.19.0"
 
   name                                   = "vpc-${var.environment}"
-  azs                                    = ["${var.aws_region}a", "${var.aws_region}b"]
+  azs                                    = local.azs
   cidr                                   = var.vpc_cidr
-  public_subnets                         = [cidrsubnet(var.vpc_cidr, 8, 0), cidrsubnet(var.vpc_cidr, 8, 1)]
-  private_subnets                        = [cidrsubnet(var.vpc_cidr, 8, 100), cidrsubnet(var.vpc_cidr, 8, 101)]
-  database_subnets                       = [cidrsubnet(var.vpc_cidr, 8, 200), cidrsubnet(var.vpc_cidr, 8, 201)]
+  public_subnets                         = local.subnets.public
+  private_subnets                        = local.subnets.private
+  database_subnets                       = local.subnets.database
   create_database_subnet_group           = true
   create_database_subnet_route_table     = true
   create_database_internet_gateway_route = var.is_database_public

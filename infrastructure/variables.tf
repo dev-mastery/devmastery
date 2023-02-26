@@ -1,10 +1,22 @@
-#region
+###############################################################################
+# ENVIRONMENT
+###############################################################################
+
+variable "environment" {
+  type        = string
+  description = "Environment"
+}
+
+
+###############################################################################
+# AWS REGION AND CREDENTIALS
+###############################################################################
+
 variable "aws_region" {
   description = "AWS region"
   default     = "ca-central-1"
 }
 
-# AWS Credentials
 variable "aws_access_key" {
   type        = string
   description = "Key used to access AWS resources"
@@ -17,12 +29,21 @@ variable "aws_secret_key" {
   sensitive   = true
 }
 
+
+###############################################################################
+# NETWORKING
+###############################################################################
+
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for vpc"
 }
 
-# Database 
+
+###############################################################################
+# DATABASE
+###############################################################################
+
 variable "is_database_public" {
   type = bool
 }
@@ -52,9 +73,4 @@ variable "db_master_username" {
 variable "db_apply_immediately" {
   type        = bool
   description = "Should we apply changes immediately to the database"
-}
-
-variable "environment" {
-  type        = string
-  description = "Environment"
 }
