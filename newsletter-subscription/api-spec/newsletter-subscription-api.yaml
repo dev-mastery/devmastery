@@ -11,6 +11,13 @@ paths:
       This path contains a `GET` and `POST` operation to perform the list and create tasks,
       respectively.
     get:
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: when_no_match
+        httpMethod: GET
+        type: aws_proxy
       responses:
         "200":
           content:
@@ -51,6 +58,13 @@ paths:
       `NewsletterSubscription`.  This path contains `GET`, `PUT`, and `DELETE` operations used to
       perform the get, update, and delete tasks, respectively.
     get:
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: when_no_match
+        httpMethod: GET
+        type: aws_proxy
       responses:
         "200":
           content:
@@ -62,6 +76,13 @@ paths:
       summary: Get a NewsletterSubscription
       description: Gets the details of a single instance of a `NewsletterSubscription`.
     put:
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "202"
+        passthroughBehavior: when_no_match
+        httpMethod: PUT
+        type: aws_proxy
       requestBody:
         description: Updated `NewsletterSubscription` information.
         content:
@@ -76,6 +97,13 @@ paths:
       summary: Update a NewsletterSubscription
       description: Updates an existing `NewsletterSubscription`.
     delete:
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "204"
+        passthroughBehavior: when_no_match
+        httpMethod: DELETE
+        type: aws_proxy
       responses:
         "204":
           description: Successful response.
