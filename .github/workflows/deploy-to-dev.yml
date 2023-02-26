@@ -23,6 +23,8 @@ jobs:
           node-version: "16.x"
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
+        with:
+          workdir: newsletter-subscription/handlers
       - run: pnpm ci
       - run: pnpm run build:subscription-request-handler
 
