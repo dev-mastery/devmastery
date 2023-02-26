@@ -5,50 +5,56 @@ variable "aws_region" {
 }
 
 # AWS Credentials
-variable "aws_access_keys" {
-  type        = map(string)
+variable "aws_access_key" {
+  type        = string
   description = "Key used to access AWS resources"
   sensitive   = true
 }
 
 variable "aws_secret_keys" {
-  type        = map(string)
+  type        = string
   description = "Secret key used to access AWS resources"
   sensitive   = true
 }
 
-variable "vpc_cidrs" {
-  type        = map(string)
-  description = "CIDR block for vpc per environment"
+variable "vpc_cidr" {
+  type        = string
+  description = "CIDR block for vpc"
 }
 
 # Database 
-variable "are_databases_public" {
-  type = map(bool)
+variable "is_database_public" {
+  type = bool
 }
 
-variable "db_min_capacities" {
-  type        = map(number)
+variable "db_min_capacity" {
+  type        = number
   description = "Minimum capacity for the database"
 }
 
-variable "db_max_capacities" {
+variable "db_max_capacity" {
+  type        = number
   description = "Maximum capacity for the database"
-  default     = 2
 }
 
-variable "db_passwords" {
-  type        = map(string)
-  description = "Password for the databases in each environment"
+variable "db_master_password" {
+  type        = string
+  description = "Password for the databases"
   sensitive   = true
 }
 
-variable "db_usernames" {
-  type        = map(string)
-  description = "Username for the databases in each environment"
+variable "db_master_username" {
+  type        = string
+  description = "Username for the databases"
+  sensitive   = true
 }
 
-variable "should_db_changes_apply_immediately" {
-  type        = map(bool)
-  description = "Should we apply changes immediately to the database in each environment"
+variable "db_apply_immediately" {
+  type        = bool
+  description = "Should we apply changes immediately to the database"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment"
 }
