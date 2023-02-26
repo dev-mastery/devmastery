@@ -5,7 +5,7 @@
 resource "aws_api_gateway_rest_api" "newsletter_subscription_api" {
   name        = "newsletter-subscription-api"
   description = "A service for subscribing to newsletters"
-  body        = jsonencode(file("../newsletter-subscription/api-spec/newsletter-subscription-api.yaml"))
+  body        = file("../newsletter-subscription/api-spec/newsletter-subscription-api.yaml")
 }
 
 resource "aws_api_gateway_deployment" "newsletter_subscription_api_deployment" {
