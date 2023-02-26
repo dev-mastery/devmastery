@@ -24,6 +24,13 @@ paths:
       summary: List All NewsletterSubscriptions
       description: Gets a list of all `NewsletterSubscription` entities.
     post:
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "201"
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
       requestBody:
         description: A new `NewsletterSubscription` to be created.
         content:
