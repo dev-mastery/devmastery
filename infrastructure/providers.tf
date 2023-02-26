@@ -7,7 +7,7 @@ terraform {
     organization = "devmastery"
 
     workspaces {
-      name = "dev"
+      name = "main"
     }
   }
   required_providers {
