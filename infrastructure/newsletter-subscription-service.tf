@@ -13,7 +13,7 @@ module "lambda-newsletter-subscription-request-handler" {
   description   = "Handles newsletter subscription requests"
   handler       = "index.on-newsletter-subscription-requested"
   runtime       = "nodejs16.x"
-  source_path   = locals.source_path
+  source_path   = local.source_path
 
   tags = local.tags
 
