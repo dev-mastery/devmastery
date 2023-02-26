@@ -9,23 +9,6 @@ on:
       - dev
 
 jobs:
-  build:
-    name: "Build"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: newsletter-subscription/handlers
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js "16.x"
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16.x"
-      - name: Install Dependencies
-        run: npm install
-      - name: Build Newsletter Subscription Handler
-        run: npm run build:subscription-request-handler
-
   infrastructure:
     name: "Infrastructure"
     runs-on: ubuntu-latest
