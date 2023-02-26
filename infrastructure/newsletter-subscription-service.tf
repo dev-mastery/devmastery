@@ -2,7 +2,7 @@
 # API LAMBDAS
 ###############################################################################
 locals {
-  source_path = "../newsletter-subscription/handlers/dist/on-newsletter-subscription-requested"
+  source_path = "./lambda/"
 }
 
 module "lambda-newsletter-subscription-request-handler" {
@@ -11,7 +11,7 @@ module "lambda-newsletter-subscription-request-handler" {
 
   function_name = "handleNewsletterSubscriptionRequest"
   description   = "Handles newsletter subscription requests"
-  handler       = "index.on-newsletter-subscription-requested"
+  handler       = "index.handler"
   runtime       = "nodejs16.x"
   source_path   = local.source_path
 
