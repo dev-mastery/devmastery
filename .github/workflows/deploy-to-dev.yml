@@ -19,8 +19,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16.x"
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
       - run: cd newsletter-subscription/handlers
-      - run: npm i pnpm
       - run: pnpm ci
       - run: pnpm run build:subscription-request-handler
 
