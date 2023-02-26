@@ -16,6 +16,9 @@ jobs:
       name: Dev
     permissions:
       pull-requests: write
+    defaults:
+      run:
+        working-directory: infrastructure
     env:
       TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_aws_region: ${{ vars.AWS_REGION }}
@@ -52,7 +55,6 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
