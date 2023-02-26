@@ -21,12 +21,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16.x"
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          workdir: newsletter-subscription/handlers
-      - run: pnpm ci
-      - run: pnpm run build:subscription-request-handler
+      - name: Install Dependencies
+        run: npm install
+      - name: Build Newsletter Subscription Handler
+        run: npm run build:subscription-request-handler
 
   infrastructure:
     name: "Infrastructure"
