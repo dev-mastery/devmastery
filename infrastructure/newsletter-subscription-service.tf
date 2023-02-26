@@ -2,7 +2,7 @@
 # API LAMBDAS
 ###############################################################################
 locals {
-  source_path = "../newsletter-subscription/handlers/dist/on-newsletter-subscription-requested/"
+  source_path = "../newsletter-subscription/handlers/dist/on-newsletter-subscription-requested"
 }
 
 module "lambda-newsletter-subscription-request-handler" {
