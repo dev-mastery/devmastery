@@ -20,10 +20,9 @@ module "rds-aurora" {
   create_security_group = true
   allowed_cidr_blocks   = local.is_database_public ? ["0.0.0.0/0"] : module.vpc.private_subnets_cidr_blocks
   publicly_accessible   = local.is_database_public
-  enable_http_endpoint  = local.is_database_public
   monitoring_interval   = 60
 
-  apply_immediately   = true
+  apply_immediately   = local.db_apply_immediately
   skip_final_snapshot = true
 
   db_parameter_group_name         = aws_db_parameter_group.postgresql14.id
@@ -38,13 +37,13 @@ module "rds-aurora" {
   master_username        = local.db_username
   create_random_password = false
 
+  tags = local.tags
+
   instance_class = "db.serverless"
   instances = {
     a = {}
     b = {}
   }
-
-  tags = local.tags
 }
 
 resource "aws_db_parameter_group" "postgresql14" {

@@ -47,3 +47,8 @@ variable "db_usernames" {
   type        = map(string)
   description = "Username for the databases in each environment"
 }
+
+variable "should_db_changes_apply_immediately" {
+  type        = map(bool)
+  description = "Should we apply changes immediately to the database in each environment"
+}
