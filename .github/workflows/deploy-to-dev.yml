@@ -20,8 +20,9 @@ jobs:
         with:
           node-version: "16.x"
       - run: cd newsletter-subscription/handlers
-      - run: npm ci
-      - run: npm run build:subscription-request-handler
+      - run: npm i pnpm
+      - run: pnpm ci
+      - run: pnpm run build:subscription-request-handler
 
   infrastructure:
     name: "Infrastructure"
