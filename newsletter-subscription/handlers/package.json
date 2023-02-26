@@ -1,0 +1,20 @@
+{
+  "name": "handlers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:subscription-request-handler": "esbuild ./src/on-newsletter-subscription-requested --bundle --minify --platform=node --target=node16 --outdir=dist/on-newsletter-subscription-requested"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-lambda": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.111",
+    "esbuild": "^0.17.10"
+  }
+}
