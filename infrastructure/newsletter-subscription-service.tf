@@ -23,5 +23,5 @@ resource "aws_api_gateway_deployment" "newsletter_subscription_api_deployment" {
 resource "aws_api_gateway_stage" "newsletter_subscription_api_stage" {
   deployment_id = aws_api_gateway_deployment.newsletter_subscription_api_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.newsletter_subscription_api.id
-  stage_name    = vars.environment
+  stage_name    = var.environment
 }
