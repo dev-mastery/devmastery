@@ -1,5 +1,0 @@
-packages:
-  - 'common/**'
-  - 'newsletter-subscription/**'
-  - 'www/**'
-  - 'auth/**'
