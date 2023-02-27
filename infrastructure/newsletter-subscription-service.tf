@@ -17,7 +17,7 @@ module "lambda-newsletter-subscription-request-handler" {
 
   tags = local.tags
 
-  ignore_source_code_hash = true
+  # ignore_source_code_hash = true
 
   # vpc_subnet_ids         = module.vpc.private_subnets
   # vpc_security_group_ids = [module.vpc.default_security_group_id]
