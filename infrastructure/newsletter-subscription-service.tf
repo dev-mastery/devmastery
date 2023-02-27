@@ -2,7 +2,7 @@
 # API LAMBDAS
 ###############################################################################
 locals {
-  source_path = "./lambda/"
+  http_lambda_source_path = "./lambda/http"
 }
 
 module "lambda-newsletter-subscription-request-handler" {
@@ -13,15 +13,15 @@ module "lambda-newsletter-subscription-request-handler" {
   description   = "Handles newsletter subscription requests"
   handler       = "index.handler"
   runtime       = "nodejs16.x"
-  source_path   = local.source_path
+  source_path   = local.http_lambda_source_path
 
   tags = local.tags
 
   ignore_source_code_hash = true
 
-  vpc_subnet_ids         = module.vpc.private_subnets
-  vpc_security_group_ids = [module.vpc.default_security_group_id]
-  attach_network_policy  = true
+  # vpc_subnet_ids         = module.vpc.private_subnets
+  # vpc_security_group_ids = [module.vpc.default_security_group_id]
+  # attach_network_policy  = true
 }
 
 ###############################################################################
