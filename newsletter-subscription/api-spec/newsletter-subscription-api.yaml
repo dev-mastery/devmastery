@@ -29,7 +29,7 @@ paths:
       responses:
         "201":
           description: Successful response.
-      operationId: createNewsletterSubscription
+      operationId: createNewsletterSubscription2
       summary: Create a NewsletterSubscription
       description: Creates a new instance of a `NewsletterSubscription`.
 components:
