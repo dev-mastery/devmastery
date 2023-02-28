@@ -1,18 +1,27 @@
 ###############################################################################
 # API LAMBDAS
 ###############################################################################
-locals {
-  http_lambda_source_path = "./lambda/http"
+data "template_file" "openapi_spec" {
+  template = file("../newsletter-subscription/api-spec/newsletter-subscription-api.yaml")
+
+  vars = {
+    createNewsletterSubscriptionUri = lambda_create_newsletter_subscription.lambda_function_invoke_arn
+  }
 }
 
-module "lambda-newsletter-subscription-request-handler" {
+locals {
+  http_lambda_source_path = "./lambda/http"
+  lambda_runtime          = "nodejs16.x"
+}
+
+module "lambda_create_newsletter_subscription" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "4.10.1"
 
-  function_name = "handleNewsletterSubscriptionRequest"
+  function_name = "createNewsletterSubscription"
   description   = "Handles newsletter subscription requests"
   handler       = "index.handler"
-  runtime       = "nodejs16.x"
+  runtime       = local.lambda_runtime
   source_path   = local.http_lambda_source_path
 
   tags = local.tags
@@ -28,26 +37,26 @@ module "lambda-newsletter-subscription-request-handler" {
 # API GATEWAY
 ###############################################################################
 
-# resource "aws_api_gateway_rest_api" "newsletter_subscription_api" {
-#   name        = "newsletter-subscription-api"
-#   description = "A service for subscribing to newsletters"
-#   body        = file("../newsletter-subscription/api-spec/newsletter-subscription-api.yaml")
-# }
+resource "aws_api_gateway_rest_api" "newsletter_subscription_api" {
+  name        = "newsletter-subscription-api"
+  description = "A service for subscribing to newsletters"
+  body        = data.template_file.openapi_spec.rendered
+}
 
-# resource "aws_api_gateway_deployment" "newsletter_subscription_api_deployment" {
-#   rest_api_id = aws_api_gateway_rest_api.newsletter_subscription_api.id
+resource "aws_api_gateway_deployment" "newsletter_subscription_api_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.newsletter_subscription_api.id
 
-#   triggers = {
-#     redeployment = sha1(jsonencode(aws_api_gateway_rest_api.newsletter_subscription_api.body))
-#   }
+  triggers = {
+    redeployment = sha1(data.template_file.openapi_spec.rendered)
+  }
 
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
-# resource "aws_api_gateway_stage" "newsletter_subscription_api_stage" {
-#   deployment_id = aws_api_gateway_deployment.newsletter_subscription_api_deployment.id
-#   rest_api_id   = aws_api_gateway_rest_api.newsletter_subscription_api.id
-#   stage_name    = var.environment
-# }
+resource "aws_api_gateway_stage" "newsletter_subscription_api_stage" {
+  deployment_id = aws_api_gateway_deployment.newsletter_subscription_api_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.newsletter_subscription_api.id
+  stage_name    = var.environment
+}

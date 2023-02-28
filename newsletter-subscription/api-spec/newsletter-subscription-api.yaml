@@ -10,26 +10,6 @@ paths:
       The REST endpoint/path used to list and create zero or more `NewsletterSubscription` entities. 
       This path contains a `GET` and `POST` operation to perform the list and create tasks,
       respectively.
-    get:
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-        passthroughBehavior: when_no_match
-        httpMethod: GET
-        type: aws_proxy
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/NewsletterSubscription"
-          description: Successful response - returns an array of `NewsletterSubscription` entities.
-      operationId: getNewsletterSubscriptions
-      summary: List All NewsletterSubscriptions
-      description: Gets a list of all `NewsletterSubscription` entities.
     post:
       x-amazon-apigateway-integration:
         responses:
@@ -38,6 +18,7 @@ paths:
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
+        uri: ${createNewsletterSubscriptionUri}
       requestBody:
         description: A new `NewsletterSubscription` to be created.
         content:
@@ -51,75 +32,6 @@ paths:
       operationId: createNewsletterSubscription
       summary: Create a NewsletterSubscription
       description: Creates a new instance of a `NewsletterSubscription`.
-  "/newsletter-subscriptions/{newsletterSubscriptionId}":
-    summary: Path used to manage a single NewsletterSubscription.
-    description: >-
-      The REST endpoint/path used to get, update, and delete single instances of an
-      `NewsletterSubscription`.  This path contains `GET`, `PUT`, and `DELETE` operations used to
-      perform the get, update, and delete tasks, respectively.
-    get:
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-        passthroughBehavior: when_no_match
-        httpMethod: GET
-        type: aws_proxy
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NewsletterSubscription"
-          description: Successful response - returns a single `NewsletterSubscription`.
-      operationId: getNewsletterSubscription
-      summary: Get a NewsletterSubscription
-      description: Gets the details of a single instance of a `NewsletterSubscription`.
-    put:
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "202"
-        passthroughBehavior: when_no_match
-        httpMethod: PUT
-        type: aws_proxy
-      requestBody:
-        description: Updated `NewsletterSubscription` information.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/NewsletterSubscription"
-        required: true
-      responses:
-        "202":
-          description: Successful response.
-      operationId: updateNewsletterSubscription
-      summary: Update a NewsletterSubscription
-      description: Updates an existing `NewsletterSubscription`.
-    delete:
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "204"
-        passthroughBehavior: when_no_match
-        httpMethod: DELETE
-        type: aws_proxy
-      responses:
-        "204":
-          description: Successful response.
-      operationId: deleteNewsletterSubscription
-      summary: Delete a NewsletterSubscription
-      description: Deletes an existing `NewsletterSubscription`.
-    parameters:
-      - examples:
-          UUID:
-            value: 76b02a81-f8a6-4d09-b19c-250336249f78
-        name: newsletterSubscriptionId
-        description: A unique identifier for a `NewsletterSubscription`.
-        schema:
-          type: string
-        in: path
-        required: true
 components:
   schemas:
     NewsletterSubscription:
