@@ -62,10 +62,10 @@ resource "aws_api_gateway_stage" "newsletter_subscription_api_stage" {
 }
 
 
-resource "aws_lambda_permission" "api_gateway_invoke_lambda_permission" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = module.lambda_create_newsletter_subscription.lambda_function_arn
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_id}:${aws_api_gateway_rest_api.newsletter_subscription_api.id}/*/*"
-}
+# resource "aws_lambda_permission" "api_gateway_invoke_lambda_permission" {
+#   statement_id  = "AllowExecutionFromAPIGateway"
+#   action        = "lambda:InvokeFunction"
+#   function_name = module.lambda_create_newsletter_subscription.lambda_function_arn
+#   principal     = "apigateway.amazonaws.com"
+#   source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_id}:${aws_api_gateway_rest_api.newsletter_subscription_api.id}/*/*"
+# }
