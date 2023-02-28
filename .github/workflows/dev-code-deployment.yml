@@ -1,0 +1,50 @@
+name: "DEV:Deploy code"
+
+on:
+  workflow_run:
+    workflows:
+      - "DEV:Deploy infrastructure"
+    branches:
+      - dev
+    types:
+      - completed
+
+jobs:
+  deploy-code:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: "Deploy code"
+    runs-on: ubuntu-latest
+    environment:
+      name: Dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Compile TypeScript
+        run: |
+          cd ./newsletter-subscription/handles/src/on-newsletter-subscription-requested
+          pnpm install --production
+          pnpm run build
+
+      - name: Package code
+        run: zip -r function.zip ./newsletter-subscription/handles/dist/on-newsletter-subscription-requested/
+
+      - name: Deploy code
+        uses: aws-actions/aws-cli@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+          cli-command: lambda
+          subcommand: update-function-code
+          parameters: >
+            --function-name createNewsletterSubscription
+            --zip-file fileb://function.zip
