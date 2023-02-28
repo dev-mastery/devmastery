@@ -1,4 +1,4 @@
-name: "DEV:Deploy infratructure"
+name: "DEV:Deploy infrastructure"
 
 on:
   push:
