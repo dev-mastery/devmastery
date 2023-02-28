@@ -2,8 +2,7 @@ name: Dev Deploy Code
 
 on:
   workflow_run:
-    workflows:
-      - dev-infrastructure-deployment
+    workflows: ["Dev Deploy Infrastructure"]
     branches:
       - dev
     types:
