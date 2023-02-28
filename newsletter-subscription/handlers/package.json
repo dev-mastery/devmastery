@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:subscription-request-handler": "esbuild ./src/on-newsletter-subscription-requested --bundle --minify --platform=node --target=node16 --outdir=dist/on-newsletter-subscription-requested"
+    "build:subscription-request-handler": "esbuild ./src/on-newsletter-subscription-requested --bundle --minify --platform=node --target=node16 --outfile=dist/on-newsletter-subscription-requested/index.js"
   },
   "keywords": [],
   "author": "",
