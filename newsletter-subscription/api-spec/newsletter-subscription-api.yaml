@@ -18,7 +18,7 @@ paths:
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
-        uri: ${createNewsletterSubscriptionUri}
+        uri: ${var.createNewsletterSubscriptionUri}
       requestBody:
         description: A new `NewsletterSubscription` to be created.
         content:
