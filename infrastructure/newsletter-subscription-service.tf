@@ -5,7 +5,7 @@ data "template_file" "openapi_spec" {
   template = file("../newsletter-subscription/api-spec/newsletter-subscription-api.yaml")
 
   vars = {
-    createNewsletterSubscriptionUri = lambda_create_newsletter_subscription.lambda_function_invoke_arn
+    createNewsletterSubscriptionUri = module.lambda_create_newsletter_subscription.lambda_function_invoke_arn
   }
 }
 
