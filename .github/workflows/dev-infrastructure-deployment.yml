@@ -1,4 +1,4 @@
-name: "DEV:Deploy infrastructure"
+name: Dev Deploy Infrastructure
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   infrastructure:
-    name: "Infrastructure"
+    name: Infrastructure
     runs-on: ubuntu-latest
     environment:
       name: Dev

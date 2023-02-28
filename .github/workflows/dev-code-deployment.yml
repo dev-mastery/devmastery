@@ -1,9 +1,9 @@
-name: "DEV:Deploy code"
+name: Dev Deploy Code
 
 on:
   workflow_run:
     workflows:
-      - "DEV:Deploy infrastructure"
+      - Dev Deploy Infrastructure
     branches:
       - dev
     types:
