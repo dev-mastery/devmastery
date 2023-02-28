@@ -17,6 +17,10 @@ variable "aws_region" {
   default     = "ca-central-1"
 }
 
+variable "aws_account_id" {
+  description = "AWS account ID"
+}
+
 variable "aws_access_key" {
   type        = string
   description = "Key used to access AWS resources"
