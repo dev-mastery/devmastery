@@ -36,7 +36,7 @@ module "lambda_create_newsletter_subscription" {
 resource "null_resource" "archive" {
   count = 1
   triggers = {
-    source_hash = filemd5(local.http_lambda_source_path)
+    source_hash = filemd5("${local.http_lambda_source_path}/index.js")
   }
 }
 
