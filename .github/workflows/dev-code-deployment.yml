@@ -10,6 +10,7 @@ on:
 
 jobs:
   deploy-code:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: "Deploy code"
     runs-on: ubuntu-latest
     environment:
@@ -17,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -26,11 +29,13 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Compile TypeScript
+      - name: Install Dependencies
         run: |
-          cd ./newsletter-subscription/handles/src/on-newsletter-subscription-requested
+          cd ./newsletter-subscription/handlers/
           pnpm install --production
-          pnpm run build
+
+      - name: Build code
+        run: pnpm run build
 
       - name: Package code
         run: zip -r function.zip ./newsletter-subscription/handles/dist/on-newsletter-subscription-requested/
