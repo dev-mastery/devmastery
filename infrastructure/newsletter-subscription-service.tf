@@ -33,6 +33,13 @@ module "lambda_create_newsletter_subscription" {
   # attach_network_policy  = true
 }
 
+resource "null_resource" "archive" {
+  count = 1
+  triggers = {
+    source_hash = filemd5(local.http_lambda_source_path)
+  }
+}
+
 ###############################################################################
 # API GATEWAY
 ###############################################################################
