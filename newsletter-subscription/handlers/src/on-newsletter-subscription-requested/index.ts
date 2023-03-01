@@ -1,6 +1,6 @@
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
 
-export const handler = async function handleNewsletterSubscriptionRequest (
+export const handler = async function handleNewsletterSubscriptionRequest(
   event: APIGatewayEvent,
   context: Context
 ): Promise<APIGatewayProxyResult> {
@@ -9,7 +9,7 @@ export const handler = async function handleNewsletterSubscriptionRequest (
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: "Hello from lambda!",
+      message: "Hello from handleNewsletterSubscriptionRequest lambda!",
     }),
   };
 };
