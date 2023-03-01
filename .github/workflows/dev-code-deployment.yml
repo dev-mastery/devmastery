@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Dev
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -41,13 +45,4 @@ jobs:
         run: zip -r function.zip ./newsletter-subscription/handles/dist/on-newsletter-subscription-requested/
 
       - name: Deploy code
-        uses: aws-actions/aws-cli@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-          cli-command: lambda
-          subcommand: update-function-code
-          parameters: >
-            --function-name createNewsletterSubscription
-            --zip-file fileb://function.zip
+        run: aws lambda update-function-code --function-name createNewsletterSubscription --zip-file fileb://function.zip
