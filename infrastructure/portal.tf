@@ -11,8 +11,6 @@ resource "aws_amplify_app" "portal" {
 
   access_token = var.gh_amplify_token
 
-  platform = WEB_COMPUTE
-
   build_spec = <<-EOT
     version: 1
     applications:
