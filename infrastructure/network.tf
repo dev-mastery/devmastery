@@ -20,3 +20,48 @@ module "vpc" {
   enable_dns_support   = true
   tags                 = local.tags
 }
+
+###############################################################################
+# CDN
+###############################################################################
+
+# module "cdn" {
+#   source = "terraform-aws-modules/cloudfront/aws"
+
+#   aliases         = ["dev.devmastery.com"]
+#   enabled         = true
+#   is_ipv6_enabled = true
+#   price_class     = "PriceClass_100"
+
+#   create_origin_access_identity = true
+#   origin_access_identities = {
+#     newsletter_newsletter_subscription_api = {
+#       comment = "Access to newsletter subscription API"
+#     }
+#   }
+
+#   origin = {
+#     newsletter_subscription_api = {
+#       domain_name = aws_api_gateway_deployment.newsletter_subscription_api_deployment.invoke_url
+#       origin_path = "/${var.environment}"
+#       origin_id   = "newsletter_subscription_api"
+
+#       custom_origin_config = {
+#         http_port              = 80
+#         https_port             = 443
+#         origin_protocol_policy = "https-only"
+#         origin_ssl_protocols   = ["TLSv1.2"]
+#       }
+#     }
+#   }
+
+#   ordered_cache_behavior = [{
+#     path_pattern     = "/api/*"
+#     target_origin_id = "newsletter_subscription_api"
+
+#     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+#     cached_methods  = ["GET", "HEAD"]
+#     compress        = true
+#     query_string    = true
+#   }]
+# }

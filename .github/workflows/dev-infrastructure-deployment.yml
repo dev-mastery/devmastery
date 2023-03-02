@@ -32,6 +32,7 @@ jobs:
       TF_VAR_environment: ${{ vars.ENVIRONMENT }}
       TF_VAR_is_database_public: ${{ vars.IS_DATABASE_PUBLIC }}
       TF_VAR_vpc_cidr: ${{ vars.VPC_CIDR }}
+      TF_VAR_gh_amplify_token: ${{ secrets.GH_AMPLIFY_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

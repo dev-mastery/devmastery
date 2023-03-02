@@ -57,6 +57,10 @@ resource "aws_api_gateway_deployment" "newsletter_subscription_api_deployment" {
     redeployment = sha1(data.template_file.openapi_spec.rendered)
   }
 
+  cors_configuration {
+    allow_origins = ["localhost:3000"]
+  }
+
   lifecycle {
     create_before_destroy = true
   }

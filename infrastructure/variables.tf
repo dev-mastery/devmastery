@@ -78,3 +78,13 @@ variable "db_apply_immediately" {
   type        = bool
   description = "Should we apply changes immediately to the database"
 }
+
+###############################################################################
+# GITHUB
+###############################################################################
+
+variable "gh_amplify_token" {
+  type        = string
+  description = "GitHub Access Token for AWS Amplify"
+  sensitive   = true
+}
