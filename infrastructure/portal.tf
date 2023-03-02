@@ -9,8 +9,6 @@ resource "aws_amplify_app" "portal" {
     ENV                       = var.environment
   }
 
-  access_token = var.gh_amplify_token
-
   build_spec = <<-EOT
     version: 1
     applications:
@@ -32,6 +30,7 @@ resource "aws_amplify_app" "portal" {
                 - node_modules/**/*
   EOT
 
+  platform = "WEB_COMPUTE"
   custom_rule {
     source = "/<*>"
     status = "404"
@@ -51,6 +50,7 @@ resource "aws_amplify_branch" "dev" {
   app_id      = aws_amplify_app.portal.id
   branch_name = "dev"
 
-  framework = "Next.js"
-  stage     = "DEVELOPMENT"
+  framework         = "Next.js"
+  stage             = "DEVELOPMENT"
+  enable_auto_build = true
 }
