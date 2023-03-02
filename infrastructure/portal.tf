@@ -13,21 +13,21 @@ resource "aws_amplify_app" "portal" {
     version: 1
     applications:
       - appRoot: portal
-          frontend:
-            phases:
-              preBuild:
-                commands:
-                  - pnpm ci
-              build:
-                commands:
-                  - pnpm run build
-            artifacts:
-              baseDirectory: .next
-              files:
-                - '**/*'
-            cache:
-              paths:
-                - node_modules/**/*
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - pnpm ci
+            build:
+              commands:
+                - pnpm run build
+          artifacts:
+            baseDirectory: .next
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
   EOT
 
   platform = "WEB_COMPUTE"
