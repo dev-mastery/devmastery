@@ -32,8 +32,10 @@ resource "aws_amplify_app" "portal" {
 
   platform = "WEB"
 
-  iam_service_role_arn = aws_iam_role.amplify_role
-
+  iam_service_role_arn = aws_iam_role.amplify_role.arn
+  depends_on = [
+    aws_iam_role.amplify_role
+  ]
   # custom_rule {
   #   source = "/<*>"
   #   status = "404"
