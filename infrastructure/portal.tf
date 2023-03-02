@@ -30,7 +30,7 @@ resource "aws_amplify_app" "portal" {
               - node_modules/**/*
   EOT
 
-  platform = "WEB_COMPUTE"
+  platform = "WEB"
   custom_rule {
     source = "/<*>"
     status = "404"
