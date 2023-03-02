@@ -75,6 +75,6 @@ resource "aws_iam_role" "amplify_role" {
     ]
   })
   managed_policy_arns = [
-    "arn:aws:iam::aws:policy/AdministratorAccess"
+    "arn:aws:iam::aws:policy/AdministratorAccess-Amplify"
   ]
 }
