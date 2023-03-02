@@ -50,7 +50,6 @@ resource "aws_amplify_branch" "dev" {
   app_id      = aws_amplify_app.portal.id
   branch_name = "dev"
 
-  framework         = "Next.js"
   stage             = "DEVELOPMENT"
   enable_auto_build = true
 }
