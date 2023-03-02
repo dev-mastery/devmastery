@@ -30,7 +30,7 @@ resource "aws_amplify_app" "portal" {
               - node_modules/**/*
   EOT
 
-  platform = "WEB"
+  platform = "WEB_COMPUTE"
 
   iam_service_role_arn = aws_iam_role.amplify_role.arn
   depends_on = [
