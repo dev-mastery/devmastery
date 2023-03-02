@@ -17,10 +17,10 @@ resource "aws_amplify_app" "portal" {
           phases:
             preBuild:
               commands:
-                - pnpm ci
+                - npm install 
             build:
               commands:
-                - pnpm run build
+                - npm run build
           artifacts:
             baseDirectory: .next
             files:
@@ -38,13 +38,13 @@ resource "aws_amplify_app" "portal" {
   }
 }
 
-resource "aws_amplify_branch" "prod" {
-  app_id      = aws_amplify_app.portal.id
-  branch_name = "main"
+# resource "aws_amplify_branch" "prod" {
+#   app_id      = aws_amplify_app.portal.id
+#   branch_name = "main"
 
-  framework = "Next.js"
-  stage     = "PRODUCTION"
-}
+#   framework = "Next.js"
+#   stage     = "PRODUCTION"
+# }
 
 resource "aws_amplify_branch" "dev" {
   app_id      = aws_amplify_app.portal.id
