@@ -31,6 +31,9 @@ resource "aws_amplify_app" "portal" {
   EOT
 
   platform = "WEB"
+
+  iam_service_role_arn = aws_iam_role.amplify_role
+
   # custom_rule {
   #   source = "/<*>"
   #   status = "404"
@@ -53,4 +56,22 @@ resource "aws_amplify_branch" "dev" {
 
   stage             = "DEVELOPMENT"
   enable_auto_build = true
+}
+
+resource "aws_iam_role" "amplify_role" {
+  name = "amplify-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "amplify.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess-Amplify"
 }
