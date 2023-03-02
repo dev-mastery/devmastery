@@ -88,3 +88,19 @@ variable "gh_amplify_token" {
   description = "GitHub Access Token for AWS Amplify"
   sensitive   = true
 }
+
+###############################################################################
+# AMPLIFY
+###############################################################################
+
+variable "amplify_username" {
+  type        = string
+  description = "Username for feature branches in amplify"
+  sensitive   = true
+}
+
+variable "amplify_password" {
+  type        = string
+  description = "Password for feature branches in amplify"
+  sensitive   = true
+}

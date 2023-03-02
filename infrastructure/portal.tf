@@ -58,6 +58,9 @@ resource "aws_amplify_branch" "dev" {
 
   stage             = "DEVELOPMENT"
   enable_auto_build = true
+
+  enable_basic_auth      = true
+  basic_auth_credentials = "${var.amplify_username}:${var.amplify_password}"
 }
 
 resource "aws_iam_role" "amplify_role" {
