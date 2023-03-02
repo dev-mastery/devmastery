@@ -31,11 +31,11 @@ resource "aws_amplify_app" "portal" {
   EOT
 
   platform = "WEB"
-  custom_rule {
-    source = "/<*>"
-    status = "404"
-    target = "/index.html"
-  }
+  # custom_rule {
+  #   source = "/<*>"
+  #   status = "404"
+  #   target = "/index.html"
+  # }
 }
 
 # resource "aws_amplify_branch" "prod" {
