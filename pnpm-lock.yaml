@@ -51,6 +51,7 @@ importers:
   lib/event-publisher:
     specifiers:
       '@types/isomorphic-fetch': ^0.0.36
+      '@types/node': 18.14.4
       '@upstash/qstash': ^0.3.6
       isomorphic-fetch: ^3.0.0
     dependencies:
@@ -58,6 +59,7 @@ importers:
       isomorphic-fetch: 3.0.0
     devDependencies:
       '@types/isomorphic-fetch': 0.0.36
+      '@types/node': 18.14.4
 
   newsletter-subscription/handlers:
     specifiers:
