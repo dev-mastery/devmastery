@@ -6,16 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:subscription-request-handler": "esbuild ./src/on-newsletter-subscription-requested --bundle --minify --platform=node --target=node16 --outfile=dist/on-newsletter-subscription-requested/index.js",
-    "build": "pnpm run build:subscription-request-handler"
+    "build": "esbuild ./api/* --bundle --minify --platform=node --target=node16 --outdir=public"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-lambda": "^1.0.7"
+    "@vercel/node": "^2.9.10"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.111",
     "esbuild": "^0.17.10"
   }
 }
