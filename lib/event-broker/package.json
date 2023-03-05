@@ -1,8 +1,8 @@
 {
-  "name": "@devmastery/event-publisher",
+  "name": "@devmastery/event-broker",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,10 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "@upstash/qstash": "^0.3.6",
-    "isomorphic-fetch": "^3.0.0"
+    "isomorphic-fetch": "^3.0.0",
+    "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.36",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "18.14.4"
   }
 }

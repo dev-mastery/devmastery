@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "title": "Schema",
+  "definitions": {
+    "NewsletterSubscription": {
+      "title": "NewsletterSubscription",
+      "description": "",
+      "required": [
+        "emailAddress",
+        "id",
+        "informedConsent",
+        "subscribedAt",
+        "newsletterId",
+        "firstName"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+          "type": "string"
+        },
+        "firstName": {
+          "minLength": 2,
+          "type": "string"
+        },
+        "emailAddress": {
+          "type": "string"
+        },
+        "newsletterId": {
+          "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+          "type": "string"
+        },
+        "verifiedEmailAddress": {
+          "pattern": "[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+",
+          "type": "string"
+        },
+        "informedConsent": {
+          "pattern": "[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+",
+          "type": "string"
+        },
+        "subscribedAt": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "$schema": "http://json-schema.org/draft-04/schema#"
+    }
+  },
+  "properties": {
+    "NewsletterSubscription": {
+      "$ref": "#/definitions/NewsletterSubscription"
+    }
+  }
+}
