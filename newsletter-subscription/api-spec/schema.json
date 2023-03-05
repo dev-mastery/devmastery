@@ -7,11 +7,11 @@
       "description": "",
       "required": [
         "emailAddress",
+        "firstName",
         "id",
         "informedConsent",
-        "subscribedAt",
         "newsletterId",
-        "firstName"
+        "subscribedAt"
       ],
       "type": "object",
       "properties": {
@@ -35,10 +35,17 @@
           "type": "string"
         },
         "informedConsent": {
-          "pattern": "[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+",
           "type": "string"
         },
         "subscribedAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "updatedAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "unsubscribedAt": {
           "format": "date-time",
           "type": "string"
         }

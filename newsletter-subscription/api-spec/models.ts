@@ -14,4 +14,6 @@ export interface NewsletterSubscription {
   verifiedEmailAddress?: string;
   informedConsent: string;
   subscribedAt: string;
+  updatedAt?: string;
+  unsubscribedAt?: string;
 }

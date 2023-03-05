@@ -39,11 +39,11 @@ components:
       description: ""
       required:
         - emailAddress
+        - firstName
         - id
         - informedConsent
-        - subscribedAt
         - newsletterId
-        - firstName
+        - subscribedAt
       type: object
       properties:
         id:
@@ -58,18 +58,24 @@ components:
           type: string
           example: a.jones@abc.com
         newsletterId:
-          pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
           type: string
-          example: 66e4c6f6-3263-4fba-99a9-ff188c50befc
+          example: "DEVMASTERY_DEFAULT"
         verifiedEmailAddress:
           pattern: '[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
           type: string
           example: a.jones@abc.com
         informedConsent:
-          pattern: '[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
           type: string
           example: I agree to receive emails from DevMastery.com
         subscribedAt:
+          format: date-time
+          type: string
+          example: "2023-02-02T00:00:00Z"
+        updatedAt:
+          format: date-time
+          type: string
+          example: "2023-02-02T00:00:00Z"
+        unsubscribedAt:
           format: date-time
           type: string
           example: "2023-02-02T00:00:00Z"
