@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import type { ApplicationEvent } from "../../../lib/event-publisher/src/";
-import { publishEvent } from "../../../lib/event-publisher/src/";
+import type { ApplicationEvent } from "@devmastery/event-publisher/src";
+import { publishEvent } from "@devmastery/event-publisher/src";
 
 export default async function handler(
   request: VercelRequest,

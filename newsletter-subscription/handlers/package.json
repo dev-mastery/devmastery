@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@devmastery/event-publisher": "workspace:^1.0.0",
     "@vercel/node": "^2.9.10"
   },
   "devDependencies": {
