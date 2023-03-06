@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ts-node ./src/generator.ts ./newsletter-subscription-api.yaml ./ yaml"
+    "build": "ts-node ../../lib/api-generator/src/api-server-generator.ts ./newsletter-subscription-api.yaml ./ yaml"
   },
   "keywords": [],
   "author": "",

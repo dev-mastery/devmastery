@@ -1,4 +1,8 @@
-import { ApplicationEvent, publishEvent } from "@devmastery/event-broker";
+import {
+  ApplicationEvent,
+  publishEvent,
+  TOPICS,
+} from "@devmastery/event-broker";
 import { NewsletterSubscription } from "@devmastery/newsletter-subscription-api/models";
 import {
   Prisma,
@@ -36,7 +40,7 @@ export async function publishNewsletterSubscriptionRequest(
     id: subscription.id,
     type: "newsletter-subscription-requested",
     data: subscription,
-    topic: "newsletter-subscription",
+    topic: TOPICS.NewsletterSubscription,
     createdAt: new Date(),
   };
 
