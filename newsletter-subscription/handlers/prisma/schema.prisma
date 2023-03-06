@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model NewsletterSubscription {
+  emailAddress         String     @unique
+  firstName            String
+  id                   String     @id
+  informedConsent      String
+  newsletter           Newsletter @relation(fields: [newsletterId], references: [id])
+  newsletterId         String
+  subscribedAt         DateTime   @default(now())
+  unsubscribedAt       DateTime?
+  updatedAt            DateTime?  @updatedAt
+  verifiedEmailAddress String?
+
+  @@index([newsletterId], name: "newsletterId")
+}
+
+model Newsletter {
+  id                     String                   @id
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime?                @updatedAt
+  name                   String
+  description            String?
+  NewsletterSubscription NewsletterSubscription[]
+}

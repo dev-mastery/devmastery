@@ -1,0 +1,30 @@
+{
+  "name": "@devmastery/newsletter-subscription-handlers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:subscription-request-handler": "esbuild ./src/on-newsletter-subscription-requested --bundle --minify --platform=node --target=node16 --outfile=dist/on-newsletter-subscription-requested/index.js",
+    "build": "esbuild ./api/* --bundle --minify --platform=node --target=node16 --outdir=public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@devmastery/event-broker": "workspace:^1.0.0",
+    "@devmastery/newsletter-subscription-api": "workspace:^1.0.0",
+    "@prisma/client": "^4.11.0",
+    "@vercel/node": "^2.9.10"
+  },
+  "devDependencies": {
+    "@types/node": "18.14.4",
+    "esbuild": "^0.17.10",
+    "prisma": "^4.11.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed.ts"
+  }
+}
