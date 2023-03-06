@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Header } from "../../../lib/components/src/Header";
+import { Header } from "../../../lib/components/src/layout/Header";
 
 export const metadata = {
   title: "DevMastery.com",

@@ -1,5 +1,5 @@
-import { Logo } from "./Logo";
-import { TopNav } from "./navigation/";
+import { Logo } from "../Logo";
+import { TopNav } from "../navigation";
 
 export function Header() {
   return (

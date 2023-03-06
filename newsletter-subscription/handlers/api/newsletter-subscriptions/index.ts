@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { NewsletterSubscriptionDecoder } from "@devmastery/newsletter-subscription-api/decoders";
-import { requestNewsletterSubscription } from "../../use-cases/request-newsletter-subscription";
+import { requestNewsletterSubscription } from "../../use-case/request-newsletter-subscription";
 
+// api/newsletter-subscriptions
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   switch (req.method) {
     case "POST":
