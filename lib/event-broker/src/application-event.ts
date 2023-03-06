@@ -1,7 +1,7 @@
-export interface ApplicationEvent {
+export interface ApplicationEvent<TData = any> {
   id: string;
   type: string;
-  data: Record<string, any>;
+  data: TData;
   topic: string;
   createdAt: Date;
 }

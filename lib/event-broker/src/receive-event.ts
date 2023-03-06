@@ -1,13 +1,13 @@
 import { IncomingMessage } from "http";
-import { isApplicationEvent } from "./application-event";
+import { ApplicationEvent, isApplicationEvent } from "./application-event";
 import { Receiver } from "@upstash/qstash";
 
 type EventRequest = IncomingMessage & { body?: any };
-export async function receiveEvent(request: EventRequest) {
+export async function receiveEvent<TData=any>(request: EventRequest) {
   await verifyRequestSignature(request);
   let body = extractJsonBody(request);
   let event = ensureBodyIsApplicationEvent(body);
-  return event;
+  return event as ApplicationEvent<TData>;
 }
 
 async function verifyRequestSignature(request: EventRequest) {
