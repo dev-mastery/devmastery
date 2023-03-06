@@ -5,10 +5,10 @@ import {
 } from "@devmastery/event-broker";
 import { NewsletterSubscription } from "@devmastery/newsletter-subscription-api/models";
 import {
-  Prisma,
   PrismaClient,
   NewsletterSubscription as NewsletterSubscriptionData,
 } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { toDB } from "../lib/mapper";
 
 type Transaction = Omit<
