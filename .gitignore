@@ -155,3 +155,5 @@ terraform.rc
 .terraform
 *.zip
 hashicorp
+newsletter-subscription/handlers/.vercel/cache/node/api/hello.ts/tsconfig-with-tsconfig-json.json
+portal/next-env.d.ts
