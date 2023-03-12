@@ -15,6 +15,8 @@ importers:
       '@vercel/node': ^2.9.10
       dotenv: ^16.0.3
       esbuild: ^0.17.10
+      ts-node: ^10.9.1
+      typescript: ^4.9.5
     dependencies:
       '@devmastery/event-broker': link:../../lib/event-broker
       '@devmastery/utils': link:../../lib/utils
@@ -25,6 +27,8 @@ importers:
     devDependencies:
       '@types/node': 18.14.4
       esbuild: 0.17.11
+      ts-node: 10.9.1_oboltcrkaqheaa54woelu7cdsa
+      typescript: 4.9.5
 
   lib/api-generator:
     specifiers:
