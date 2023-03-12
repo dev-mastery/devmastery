@@ -1,6 +1,7 @@
 import { IncomingMessage } from "http";
 import { ApplicationEvent, isApplicationEvent } from "./application-event";
 import { Receiver } from "@upstash/qstash";
+import type { Readable } from "node:stream";
 
 type EventRequest = IncomingMessage & { body?: any };
 
@@ -29,10 +30,10 @@ async function verifyUpstashSignature(request: EventRequest) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
     signature: request.headers[UPSTASH_SIGNATURE_HEADER] as string,
-    body:
-      typeof request.body == "object"
-        ? JSON.stringify(request.body)
-        : request.body,
+    body: await buffer(request),
+    // typeof request.body == "object"
+    //   ? JSON.stringify(request.body)
+    //   : request.body,
     clockTolerance: 5,
   });
 
@@ -91,4 +92,14 @@ function ensureEnvironmentVariables() {
       "QSTASH_CURRENT_SIGNING_KEY environment variable is not defined"
     );
   }
+}
+
+async function buffer(readable: Readable) {
+  const chunks = [];
+
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+
+  return Buffer.concat(chunks);
 }
