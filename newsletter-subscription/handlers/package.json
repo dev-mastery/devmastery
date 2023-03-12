@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:subscription-request-handler": "esbuild ./src/on-newsletter-subscription-requested --bundle --minify --platform=node --target=node16 --outfile=dist/on-newsletter-subscription-requested/index.js",
-    "build": "prisma generate && esbuild ./api/* --bundle --minify --platform=node --target=node16 --outdir=dist"
+    "build": "prisma generate && esbuild ./api/**/* --bundle --minify --platform=node --target=node16 --outdir=dist"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +13,7 @@
   "dependencies": {
     "@devmastery/event-broker": "workspace:^1.0.0",
     "@devmastery/newsletter-subscription-api": "workspace:^1.0.0",
+    "@devmastery/utils": "workspace:^1.0.0",
     "@prisma/client": "^4.11.0",
     "@vercel/node": "^2.9.10"
   },

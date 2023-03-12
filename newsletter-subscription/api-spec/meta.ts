@@ -1,10 +1,22 @@
 /* eslint-disable */
-import { NewsletterSubscription } from "./models";
+import {
+  EmailAddressVerifiedEvent,
+  NewsletterSubscription,
+  VerifiedEmailAddress,
+} from "./models";
 
 export const schemaDefinitions = {
+  EmailAddressVerifiedEvent: info<EmailAddressVerifiedEvent>(
+    "EmailAddressVerifiedEvent",
+    "#/definitions/EmailAddressVerifiedEvent"
+  ),
   NewsletterSubscription: info<NewsletterSubscription>(
     "NewsletterSubscription",
     "#/definitions/NewsletterSubscription"
+  ),
+  VerifiedEmailAddress: info<VerifiedEmailAddress>(
+    "VerifiedEmailAddress",
+    "#/definitions/VerifiedEmailAddress"
   ),
 };
 

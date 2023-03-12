@@ -6,14 +6,17 @@ import { requestNewsletterSubscription } from "../../use-case/request-newsletter
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   switch (req.method) {
     case "POST":
-      postNewsletterSubscription(req, res);
+      createNewsletterSubscription(req, res);
+      break;
+    case "GET":
+      listNewsletterSubscriptions(req, res);
       break;
     default:
       res.status(405).end();
   }
 }
 
-async function postNewsletterSubscription(
+async function createNewsletterSubscription(
   req: VercelRequest,
   res: VercelResponse
 ) {
@@ -21,3 +24,8 @@ async function postNewsletterSubscription(
   await requestNewsletterSubscription(data);
   res.status(202).json(data);
 }
+
+async function listNewsletterSubscriptions(
+  req: VercelRequest,
+  res: VercelResponse
+) {}

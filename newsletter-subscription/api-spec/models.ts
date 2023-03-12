@@ -6,6 +6,16 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+export interface EmailAddressVerifiedEvent {
+  id: string;
+  eventType: "EMAIL_ADDRESS_VERIFIED";
+  createdAt: string;
+  data: VerifiedEmailAddress;
+}
+export interface VerifiedEmailAddress {
+  emailAddress?: string;
+  verifiedAt?: string;
+}
 export interface NewsletterSubscription {
   id: string;
   firstName: string;
@@ -14,6 +24,10 @@ export interface NewsletterSubscription {
   verifiedEmailAddress?: string;
   informedConsent: string;
   subscribedAt: string;
-  updatedAt?: string;
   unsubscribedAt?: string;
+  updatedAt?: string;
+}
+export interface VerifiedEmailAddress1 {
+  emailAddress?: string;
+  verifiedAt?: string;
 }

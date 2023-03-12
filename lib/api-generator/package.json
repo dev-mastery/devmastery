@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "18.14.4",
     "@types/yargs": "^17.0.22",
     "openapi-typescript-validator": "^3.3.0",
     "yargs": "^17.7.1"

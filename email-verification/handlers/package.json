@@ -4,9 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pnpm run build:api && prisma generate && esbuild ./api/*/** --bundle --minify --platform=node --target=node16 --outdir=dist",
+    "build:api": "ts-node ../../lib/api-generator/src/api-server-generator.ts ./email-verification-api.yaml ./api-utils yaml"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@devmastery/event-broker": "workspace:^1.0.0",
+    "@devmastery/utils": "workspace:^1.0.0",
+    "@prisma/client": "^4.11.0",
+    "@sendgrid/mail": "^7.7.0",
+    "@vercel/node": "^2.9.10",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "18.14.4",
+    "esbuild": "^0.17.10"
+  }
 }

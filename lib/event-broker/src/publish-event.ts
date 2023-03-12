@@ -1,9 +1,16 @@
 import { Client, ClientConfig } from "@upstash/qstash";
 import { ApplicationEvent } from "./application-event";
 import "isomorphic-fetch";
+import { Topic } from "./topics";
 
-export async function publishEvent(event: ApplicationEvent) {
-  let normalizedTopic = normalizeTopic(event.topic);
+export async function publishEvent({
+  event,
+  topic,
+}: {
+  event: ApplicationEvent;
+  topic: Topic;
+}) {
+  let normalizedTopic = normalizeTopic(topic);
   let client = makeQstashClient();
   let res = await client.publishJSON({
     topic: normalizedTopic,

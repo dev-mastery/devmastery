@@ -1,40 +1,54 @@
 import {
   ApplicationEvent,
+  EVENT_TYPES,
   publishEvent,
   TOPICS,
 } from "@devmastery/event-broker";
 import { NewsletterSubscription } from "@devmastery/newsletter-subscription-api/models";
-import {
-  PrismaClient,
-  NewsletterSubscription as NewsletterSubscriptionData,
-} from "@prisma/client";
-import { toDB } from "../lib/mapper";
-
-const prisma = new PrismaClient();
+import { NewsletterSubscription as NewsletterSubscriptionData } from "@prisma/client";
+import { toApi, toDB } from "../lib/mapper";
+import { db, DbClient } from "../lib/db";
 
 export async function requestNewsletterSubscription(
   subscription: NewsletterSubscription
 ) {
+  let subscriptionData = toDB(subscription);
 
-  let dbSubscription = toDB(subscription);
-  await prisma.$transaction(async (tx: Transaction) => {
-    await saveNewsletterSubscriptionRequest(dbSubscription, tx);
+  let savedSubscriptionData = await db.$transaction(async (tx: Transaction) => {
+    let saved = await saveNewsletterSubscriptionRequest({
+      subscriptionData,
+      tx,
+    });
+
     await publishNewsletterSubscriptionRequest(subscription);
+
+    return saved;
   });
 
-  return subscription;
+  return toApi(savedSubscriptionData);
 }
 
-async function saveNewsletterSubscriptionRequest(
-  subscription: NewsletterSubscriptionData,
-  prisma: PrismaClient | Transaction
-) {
-  return prisma.newsletterSubscription.upsert({
+async function saveNewsletterSubscriptionRequest({
+  subscriptionData,
+  tx,
+}: {
+  subscriptionData: NewsletterSubscriptionData;
+  tx: Partial<DbClient>;
+}) {
+  if (tx.newsletterSubscription == null) {
+    throw new Error(
+      "Invalid db transaction. NewsletterSubscription entity not found."
+    );
+  }
+
+  let { emailAddress, subscribedAt, id, ...updatedInfo } = subscriptionData;
+
+  return tx.newsletterSubscription.upsert({
     where: {
-      emailAddress: subscription.emailAddress,
+      emailAddress,
     },
-    update: subscription,
-    create: subscription,
+    create: subscriptionData,
+    update: updatedInfo,
   });
 }
 
@@ -43,16 +57,18 @@ export async function publishNewsletterSubscriptionRequest(
 ) {
   let event: ApplicationEvent<NewsletterSubscription> = {
     id: subscription.id,
-    type: "newsletter-subscription-requested",
+    eventType: EVENT_TYPES.NewsletterSubscriptionRequested,
     data: subscription,
-    topic: TOPICS.NewsletterSubscription,
-    createdAt: new Date(),
+    occuredAt: new Date(),
   };
 
-  await publishEvent(event);
+  await publishEvent({
+    event,
+    topic: TOPICS.NewsletterSubscription,
+  });
 }
 
 type Transaction = Omit<
-  PrismaClient,
+  DbClient,
   "$connect" | "$disconnect" | "$on" | "$transaction" | "$use"
 >;

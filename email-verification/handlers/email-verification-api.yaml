@@ -1,0 +1,138 @@
+openapi: 3.0.2
+info:
+  title: Email Verification API
+  version: 1.0.0
+paths:
+  /event-listeners/on-new-email-address/:
+    post:
+      responses:
+        "200":
+          description: OK
+      security:
+        - Upstash-Signature: []
+  /verified-email-addresses:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailVerification"
+            examples:
+              EmailVerificationRequest:
+                value:
+                  emailAddress: d2211d9a-950b-4b65-b2cb-5ff41fc03a76
+                  verificationCode: "812678"
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          content:
+            application/json: {}
+          description: Bad Request
+      operationId: createVerifiedEmailAddress
+      summary: Verifies an email address
+components:
+  schemas:
+    EmailVerification:
+      title: EmailVerification
+      description: Represents an email verification
+      required:
+        - emailAddress
+        - verificationCode
+      type: object
+      properties:
+        emailAddress:
+          pattern: '[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
+          type: string
+        verificationCode:
+          type: string
+      example:
+        id: a57b837d-2aa6-4400-a1f4-1fd1fbc8f9cf
+        emailAddress: mo@gmail.com
+        verificationCode: "739478"
+    VerifiedEmailAddress:
+      title: VerifiedEmailAddress
+      description: A verified email address
+      type: object
+      properties:
+        emailAddress:
+          type: string
+        verifiedAt:
+          format: date-time
+          type: string
+        createdAt:
+          format: date-time
+          description: ""
+          type: string
+        updatedAt:
+          format: date-time
+          description: ""
+          type: string
+      example:
+        emailAddress: jo@me.com
+        verifiedAt: "2018-02-10T09:30Z"
+        createdAt: "2018-02-10T09:30Z"
+        updatedAt: "2018-02-10T09:30Z"
+    NewEmailAddressEventData:
+      title: NewEmailAddressEventData
+      description: ""
+      type: object
+      properties:
+        emailAddress:
+          type: string
+      example:
+        emailAddress: mo@yahoo.com
+    NewEmailAddressEvent:
+      title: NewEmailEvent
+      description: ""
+      required:
+        - data
+      type: object
+      properties:
+        id:
+          type: string
+        data:
+          $ref: "#/components/schemas/NewEmailAddressEventData"
+          properties:
+            emailAddress:
+              type: string
+        eventType:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+      example:
+        id: d2211d9a-950b-4b65-b2cb-5ff41fc03a76
+        data:
+          emailAddress: mo@yahoo.ca
+        eventType: string
+        createdAt: "2023-03-07T12:00:00Z"
+    ApiError:
+      title: ApiError
+      description: ""
+      type: object
+      properties:
+        status:
+          format: int32
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+      example:
+        status: 400
+        message: Unknown email address.
+        error: ""
+  responses:
+    ErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+      description: ""
+  securitySchemes:
+    Upstash-Signature:
+      type: apiKey
+      name: Upstash-Signature
+      in: header

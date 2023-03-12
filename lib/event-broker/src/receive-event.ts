@@ -3,7 +3,8 @@ import { ApplicationEvent, isApplicationEvent } from "./application-event";
 import { Receiver } from "@upstash/qstash";
 
 type EventRequest = IncomingMessage & { body?: any };
-export async function receiveEvent<TData=any>(request: EventRequest) {
+
+export async function receiveEvent<TData = any>(request: EventRequest) {
   await verifyRequestSignature(request);
   let body = extractJsonBody(request);
   let event = ensureBodyIsApplicationEvent(body);
@@ -11,6 +12,16 @@ export async function receiveEvent<TData=any>(request: EventRequest) {
 }
 
 async function verifyRequestSignature(request: EventRequest) {
+  if (request.headers["Upstash-Signature"]) {
+    return verifyUpstashSignature(request);
+  }
+  if (request.headers["DEVMASTERY-API-KEY"]) {
+    return verifyDevmasteryApiKey(request);
+  }
+  throw new Error("Missing API key or Upstash signature");
+}
+
+async function verifyUpstashSignature(request: EventRequest) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
     signature: request.headers["Upstash-Signature"] as string,
@@ -19,7 +30,14 @@ async function verifyRequestSignature(request: EventRequest) {
   });
 
   if (!verified) {
-    throw new Error("Could not verify request");
+    throw new Error("Invalid Upstash signature");
+  }
+}
+
+async function verifyDevmasteryApiKey(request: EventRequest) {
+  let apiKey = request.headers["DEVMASTERY-API-KEY"] as string;
+  if (apiKey !== process.env.DEVMASTERY_API_KEY) {
+    throw new Error("Invalid API key");
   }
 }
 

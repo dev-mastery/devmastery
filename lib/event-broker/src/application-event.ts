@@ -1,17 +1,15 @@
 export interface ApplicationEvent<TData = any> {
   id: string;
-  type: string;
+  eventType: string;
   data: TData;
-  topic: string;
-  createdAt: Date;
+  occuredAt: Date;
 }
 
 export function isApplicationEvent(event: any): event is ApplicationEvent {
   return (
     event.id !== undefined &&
-    event.type !== undefined &&
+    event.eventType !== undefined &&
     event.data !== undefined &&
-    event.topic !== undefined &&
-    event.createdAt !== undefined
+    event.occuredAt !== undefined
   );
 }

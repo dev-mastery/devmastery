@@ -2,16 +2,47 @@
   "type": "object",
   "title": "Schema",
   "definitions": {
+    "EmailAddressVerifiedEvent": {
+      "title": "EmailAddressVerifiedEvent",
+      "description": "",
+      "required": [
+        "data",
+        "createdAt",
+        "eventType",
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "eventType": {
+          "enum": [
+            "EMAIL_ADDRESS_VERIFIED"
+          ],
+          "type": "string"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/VerifiedEmailAddress",
+          "description": ""
+        }
+      },
+      "$schema": "http://json-schema.org/draft-04/schema#"
+    },
     "NewsletterSubscription": {
       "title": "NewsletterSubscription",
       "description": "",
       "required": [
         "emailAddress",
-        "firstName",
         "id",
         "informedConsent",
+        "subscribedAt",
         "newsletterId",
-        "subscribedAt"
+        "firstName"
       ],
       "type": "object",
       "properties": {
@@ -27,6 +58,7 @@
           "type": "string"
         },
         "newsletterId": {
+          "pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
           "type": "string"
         },
         "verifiedEmailAddress": {
@@ -34,17 +66,35 @@
           "type": "string"
         },
         "informedConsent": {
+          "pattern": "[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+",
           "type": "string"
         },
         "subscribedAt": {
           "format": "date-time",
           "type": "string"
         },
-        "updatedAt": {
+        "unsubscribedAt": {
           "format": "date-time",
+          "description": "",
           "type": "string"
         },
-        "unsubscribedAt": {
+        "updatedAt": {
+          "format": "date-time",
+          "description": "",
+          "type": "string"
+        }
+      },
+      "$schema": "http://json-schema.org/draft-04/schema#"
+    },
+    "VerifiedEmailAddress": {
+      "title": "VerifiedEmailAddress",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "emailAddress": {
+          "type": "string"
+        },
+        "verifiedAt": {
           "format": "date-time",
           "type": "string"
         }
@@ -53,8 +103,14 @@
     }
   },
   "properties": {
+    "EmailAddressVerifiedEvent": {
+      "$ref": "#/definitions/EmailAddressVerifiedEvent"
+    },
     "NewsletterSubscription": {
       "$ref": "#/definitions/NewsletterSubscription"
+    },
+    "VerifiedEmailAddress": {
+      "$ref": "#/definitions/VerifiedEmailAddress"
     }
   }
 }
