@@ -1,6 +1,6 @@
-import { publishEvent, TOPICS } from "@devmastery/event-broker";
+import { EVENT_TYPES, publishEvent, TOPICS } from "@devmastery/event-broker";
 import { EmailAddress, PrismaClient } from "@prisma/client";
-import { normalizeEmailAddress } from "@devmastery/utils";
+import { newId, normalizeEmailAddress } from "@devmastery/utils";
 
 const prisma = new PrismaClient();
 
@@ -36,8 +36,8 @@ export async function verifyEmailAddress(verification: EmailVerification) {
         topic: TOPICS.EmailVerification,
         event: {
           data: verifiedEmailRecord,
-          eventType: "email-address-verified",
-          id: crypto.randomUUID(),
+          eventType: EVENT_TYPES.EmailAddressVerified,
+          id: newId(),
           occuredAt: new Date(),
         },
       });
