@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pnpm run build:api && prisma generate && esbuild ./api/*/** --bundle --minify --platform=node --target=node16 --outdir=dist",
-    "build:api": "ts-node ../../lib/api-generator/src/api-server-generator.ts ./email-verification-api.yaml ./api-utils yaml"
+    "build": "pnpm run build:api && pnpx prisma generate && esbuild ./api/*/** --bundle --minify --platform=node --target=node16 --outdir=dist",
+    "build:api": "pnpx ts-node ../../lib/api-generator/src/api-server-generator.ts ./email-verification-api.yaml ./api-utils yaml"
   },
   "keywords": [],
   "author": "",
