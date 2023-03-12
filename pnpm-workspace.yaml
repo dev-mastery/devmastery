@@ -1,5 +1,5 @@
 packages:
   - "./lib/**"
-  - "./email-verficiation/**"
+  - "./email-verification/**"
   - "./newsletter-subscription/**"
   - "./portal"
