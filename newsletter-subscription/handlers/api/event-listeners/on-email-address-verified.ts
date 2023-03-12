@@ -33,3 +33,9 @@ async function postOnEmailAddressVerified(
     });
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
