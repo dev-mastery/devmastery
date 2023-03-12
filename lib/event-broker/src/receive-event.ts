@@ -3,20 +3,22 @@ import { ApplicationEvent, isApplicationEvent } from "./application-event";
 import { Receiver } from "@upstash/qstash";
 import type { Readable } from "node:stream";
 
-type EventRequest = IncomingMessage & { body?: any };
+type EventRequest = IncomingMessage;
+type EventRequestWithParsedBody = EventRequest & { body: any };
 
 const API_KEY_HEADER = "devmastery-api-key";
 const UPSTASH_SIGNATURE_HEADER = "upstash-signature";
 
 export async function receiveEvent<TData = any>(request: EventRequest) {
-  await verifyRequestSignature(request);
-  let body = extractJsonBody(request);
-  let event = ensureBodyIsApplicationEvent(body);
+  let body = (await buffer(request)).toString("hex");
+  let req = Object.assign(request, { body });
+  await verifyRequestSignature(req);
+  let jsonBody = extractJsonBody(req);
+  let event = ensureBodyIsApplicationEvent(jsonBody);
   return event as ApplicationEvent<TData>;
 }
 
-async function verifyRequestSignature(request: EventRequest) {
-  console.log(request.headers);
+async function verifyRequestSignature(request: EventRequestWithParsedBody) {
   if (request.headers[UPSTASH_SIGNATURE_HEADER]) {
     return verifyUpstashSignature(request);
   }
@@ -26,14 +28,11 @@ async function verifyRequestSignature(request: EventRequest) {
   throw new Error("Missing API key or Upstash signature");
 }
 
-async function verifyUpstashSignature(request: EventRequest) {
+async function verifyUpstashSignature(request: EventRequestWithParsedBody) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
     signature: request.headers[UPSTASH_SIGNATURE_HEADER] as string,
     body: await buffer(request),
-    // typeof request.body == "object"
-    //   ? JSON.stringify(request.body)
-    //   : request.body,
     clockTolerance: 5,
   });
 
@@ -42,7 +41,7 @@ async function verifyUpstashSignature(request: EventRequest) {
   }
 }
 
-async function verifyDevmasteryApiKey(request: EventRequest) {
+async function verifyDevmasteryApiKey(request: EventRequestWithParsedBody) {
   let apiKey = request.headers[API_KEY_HEADER] as string;
   if (apiKey !== process.env.DEVMASTERY_API_KEY) {
     throw new Error("Invalid API key");
@@ -57,7 +56,7 @@ function makeReceiver() {
   });
 }
 
-function extractJsonBody(request: EventRequest): any {
+function extractJsonBody(request: EventRequestWithParsedBody): any {
   if (!request.body) {
     throw new Error("No body found in request");
   }
