@@ -25,3 +25,9 @@ export default async function onNewEmailAddress(
     res.status(400).json(errorResponse);
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

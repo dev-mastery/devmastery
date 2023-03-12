@@ -29,7 +29,10 @@ async function verifyUpstashSignature(request: EventRequest) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
     signature: request.headers[UPSTASH_SIGNATURE_HEADER] as string,
-    body: request.body,
+    body:
+      typeof request.body == "object"
+        ? JSON.stringify(request.body)
+        : request.body,
     clockTolerance: 5,
   });
 
