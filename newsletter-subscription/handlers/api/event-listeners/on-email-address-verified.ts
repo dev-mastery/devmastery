@@ -26,6 +26,7 @@ async function postOnEmailAddressVerified(
     await confirmNewsletterSubscription(verifiedEmailAddress);
     res.status(200).end();
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       status: 400,
       message: (error as Error).message,
