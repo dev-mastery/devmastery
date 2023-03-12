@@ -4,6 +4,9 @@ import { Receiver } from "@upstash/qstash";
 
 type EventRequest = IncomingMessage & { body?: any };
 
+const API_KEY_HEADER = "devmastery-api-key";
+const UPSTASH_SIGNATURE_HEADER = "upstash-signature";
+
 export async function receiveEvent<TData = any>(request: EventRequest) {
   await verifyRequestSignature(request);
   let body = extractJsonBody(request);
@@ -12,10 +15,11 @@ export async function receiveEvent<TData = any>(request: EventRequest) {
 }
 
 async function verifyRequestSignature(request: EventRequest) {
-  if (request.headers["Upstash-Signature"]) {
+  console.log(request.headers);
+  if (request.headers[UPSTASH_SIGNATURE_HEADER]) {
     return verifyUpstashSignature(request);
   }
-  if (request.headers["DEVMASTERY-API-KEY"]) {
+  if (request.headers[API_KEY_HEADER]) {
     return verifyDevmasteryApiKey(request);
   }
   throw new Error("Missing API key or Upstash signature");
@@ -24,7 +28,7 @@ async function verifyRequestSignature(request: EventRequest) {
 async function verifyUpstashSignature(request: EventRequest) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
-    signature: request.headers["Upstash-Signature"] as string,
+    signature: request.headers[UPSTASH_SIGNATURE_HEADER] as string,
     body: request.body,
     clockTolerance: 5,
   });
@@ -35,7 +39,7 @@ async function verifyUpstashSignature(request: EventRequest) {
 }
 
 async function verifyDevmasteryApiKey(request: EventRequest) {
-  let apiKey = request.headers["DEVMASTERY-API-KEY"] as string;
+  let apiKey = request.headers[API_KEY_HEADER] as string;
   if (apiKey !== process.env.DEVMASTERY_API_KEY) {
     throw new Error("Invalid API key");
   }
@@ -53,8 +57,11 @@ function extractJsonBody(request: EventRequest): any {
   if (!request.body) {
     throw new Error("No body found in request");
   }
+  console.log(request.body);
   try {
-    return JSON.parse(request.body);
+    return typeof request.body == "object"
+      ? request.body
+      : JSON.parse(request.body);
   } catch (err) {
     throw new TypeError(
       `Could not parse request body as JSON: ${(err as Error).message}`

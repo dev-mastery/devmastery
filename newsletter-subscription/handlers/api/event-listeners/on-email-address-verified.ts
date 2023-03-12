@@ -22,7 +22,7 @@ async function postOnEmailAddressVerified(
 ) {
   try {
     const event = await receiveEvent<VerifiedEmailAddress>(req);
-    const verifiedEmailAddress = VerifiedEmailAddressDecoder.decode(event);
+    const verifiedEmailAddress = VerifiedEmailAddressDecoder.decode(event.data);
     await confirmNewsletterSubscription(verifiedEmailAddress);
     res.status(200).end();
   } catch (error) {
