@@ -19,7 +19,7 @@ export async function onEmailAddressVerified(
   } else if (req.method === "OPTIONS") {
     res.status(200).end();
   } else {
-    return res.status(501).end();
+    res.status(501).end();
   }
 }
 async function postOnEmailAddressVerified(
@@ -30,9 +30,9 @@ async function postOnEmailAddressVerified(
     const event = await receiveEvent<VerifiedEmailAddress>(req);
     const verifiedEmailAddress = VerifiedEmailAddressDecoder.decode(event);
     await confirmNewsletterSubscription(verifiedEmailAddress);
-    return res.status(200).end();
+    res.status(200).end();
   } catch (error) {
-    return res.status(400).json({
+    res.status(400).json({
       status: 400,
       message: (error as Error).message,
       error,
