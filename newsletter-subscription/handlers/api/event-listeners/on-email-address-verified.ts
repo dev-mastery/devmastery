@@ -1,16 +1,10 @@
 import { receiveEvent } from "@devmastery/event-broker";
-import {
-  EmailAddressVerifiedEventDecoder,
-  VerifiedEmailAddressDecoder,
-} from "@devmastery/newsletter-subscription-api/decoders";
-import {
-  EmailAddressVerifiedEvent,
-  VerifiedEmailAddress,
-} from "@devmastery/newsletter-subscription-api/models";
+import { VerifiedEmailAddressDecoder } from "@devmastery/newsletter-subscription-api/decoders";
+import { VerifiedEmailAddress } from "@devmastery/newsletter-subscription-api/models";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { confirmNewsletterSubscription } from "../../use-case/confirm-newsletter-subscription";
 
-export async function onEmailAddressVerified(
+export default async function onEmailAddressVerified(
   req: VercelRequest,
   res: VercelResponse
 ) {
