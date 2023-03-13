@@ -26,6 +26,8 @@ export default async function onNewEmailAddress(
   }
 }
 
+// Disable bodyParser to let the event-broker compare a hash of the raw body
+// to a hash in the signature header for security.
 export const config = {
   api: {
     bodyParser: false,
