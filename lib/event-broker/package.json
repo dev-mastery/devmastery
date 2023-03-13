@@ -12,7 +12,8 @@
   "dependencies": {
     "@upstash/qstash": "^0.3.6",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "raw-body": "^2.5.2"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.36",
