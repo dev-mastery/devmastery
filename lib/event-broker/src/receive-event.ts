@@ -4,14 +4,15 @@ import { Receiver } from "@upstash/qstash";
 import type { Readable } from "node:stream";
 
 type EventRequest = IncomingMessage;
-type EventRequestWithParsedBody = EventRequest & { body: any };
+type EventRequestWithParsedBody = EventRequest & { body: any; rawBody: Buffer };
 
 const API_KEY_HEADER = "devmastery-api-key";
 const UPSTASH_SIGNATURE_HEADER = "upstash-signature";
 
 export async function receiveEvent<TData = any>(request: EventRequest) {
-  let body = (await buffer(request)).toString("hex");
-  let req = Object.assign(request, { body });
+  let rawBody = await buffer(request);
+  let body = rawBody.toString("hex");
+  let req = Object.assign(request, { body, rawBody });
   await verifyRequestSignature(req);
   let jsonBody = extractJsonBody(req);
   let event = ensureBodyIsApplicationEvent(jsonBody);
@@ -32,7 +33,7 @@ async function verifyUpstashSignature(request: EventRequestWithParsedBody) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
     signature: request.headers[UPSTASH_SIGNATURE_HEADER] as string,
-    body: await buffer(request),
+    body: request.rawBody,
     clockTolerance: 5,
   });
 
