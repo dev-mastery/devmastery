@@ -2,6 +2,7 @@ import { Client, ClientConfig } from "@upstash/qstash";
 import { ApplicationEvent } from "./application-event";
 import "isomorphic-fetch";
 import { Topic } from "./topics";
+import { EnvironmentVariableError } from "./errors";
 
 export async function publishEvent({
   event,
@@ -12,17 +13,13 @@ export async function publishEvent({
 }) {
   let normalizedTopic = normalizeTopic(topic);
   let client = makeQstashClient();
+
   let res = await client.publishJSON({
     topic: normalizedTopic,
     body: event,
   });
-  return { ...res, ...event };
-}
 
-function ensureEnvironmentVariables() {
-  if (process.env.QSTASH_TOKEN === undefined) {
-    throw new Error("QSTASH_TOKEN environment variable is not defined");
-  }
+  return { ...res, ...event };
 }
 
 // Qstash topics can only contain lowercase letters, numbers, and hyphens
@@ -32,9 +29,16 @@ function normalizeTopic(topic: string) {
 }
 
 function makeQstashClient() {
-  ensureEnvironmentVariables();
   let config: ClientConfig = {
-    token: process.env.QSTASH_TOKEN!,
+    token: getQstashToken(),
   };
   return new Client(config);
+}
+
+function getQstashToken() {
+  let token = process.env.QSTASH_TOKEN;
+  if (typeof token !== "string" || token.trim().length < 80) {
+    throw new EnvironmentVariableError("QSTASH_TOKEN");
+  }
+  return token;
 }
