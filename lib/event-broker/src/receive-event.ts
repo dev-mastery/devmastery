@@ -11,7 +11,7 @@ const UPSTASH_SIGNATURE_HEADER = "upstash-signature";
 
 export async function receiveEvent<TData = any>(request: EventRequest) {
   let rawBody = await buffer(request);
-  let body = rawBody.toString("hex");
+  let body = rawBody.toString("utf-8");
   let req = Object.assign(request, { body, rawBody });
   await verifyRequestSignature(req);
   let jsonBody = extractJsonBody(req);
