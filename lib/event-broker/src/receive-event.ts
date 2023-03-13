@@ -1,25 +1,25 @@
 import { IncomingMessage } from "http";
 import { ApplicationEvent, isApplicationEvent } from "./application-event";
 import { Receiver } from "@upstash/qstash";
-import type { Readable } from "node:stream";
+import getRawBody from "raw-body";
+import { EnvironmentVariableError } from "./errors";
 
 type EventRequest = IncomingMessage;
-type EventRequestWithParsedBody = EventRequest & { body: any; rawBody: Buffer };
+type EventRequestWithRawBody = EventRequest & { rawBody: Buffer };
 
 const API_KEY_HEADER = "devmastery-api-key";
 const UPSTASH_SIGNATURE_HEADER = "upstash-signature";
 
 export async function receiveEvent<TData = any>(request: EventRequest) {
-  let rawBody = await buffer(request);
-  let body = rawBody.toString("utf-8");
-  let req = Object.assign(request, { body, rawBody });
+  let rawBody = await getRawBody(request);
+  let req = Object.assign(request, { rawBody });
   await verifyRequestSignature(req);
   let jsonBody = extractJsonBody(req);
   let event = ensureBodyIsApplicationEvent(jsonBody);
   return event as ApplicationEvent<TData>;
 }
 
-async function verifyRequestSignature(request: EventRequestWithParsedBody) {
+async function verifyRequestSignature(request: EventRequestWithRawBody) {
   if (request.headers[UPSTASH_SIGNATURE_HEADER]) {
     return verifyUpstashSignature(request);
   }
@@ -29,7 +29,7 @@ async function verifyRequestSignature(request: EventRequestWithParsedBody) {
   throw new Error("Missing API key or Upstash signature");
 }
 
-async function verifyUpstashSignature(request: EventRequestWithParsedBody) {
+async function verifyUpstashSignature(request: EventRequestWithRawBody) {
   let receiver = makeReceiver();
   let verified = await receiver.verify({
     signature: request.headers[UPSTASH_SIGNATURE_HEADER] as string,
@@ -42,7 +42,7 @@ async function verifyUpstashSignature(request: EventRequestWithParsedBody) {
   }
 }
 
-async function verifyDevmasteryApiKey(request: EventRequestWithParsedBody) {
+async function verifyDevmasteryApiKey(request: EventRequestWithRawBody) {
   let apiKey = request.headers[API_KEY_HEADER] as string;
   if (apiKey !== process.env.DEVMASTERY_API_KEY) {
     throw new Error("Invalid API key");
@@ -50,22 +50,30 @@ async function verifyDevmasteryApiKey(request: EventRequestWithParsedBody) {
 }
 
 function makeReceiver() {
-  ensureEnvironmentVariables();
+  let currentSigningKey = process.env.QSTASH_CURRENT_SIGNING_KEY;
+  let nextSigningKey = process.env.QSTASH_NEXT_SIGNING_KEY;
+
+  if (!isValidSigningKey(currentSigningKey)) {
+    throw new EnvironmentVariableError("QSTASH_CURRENT_SIGNING_KEY");
+  }
+
+  if (!isValidSigningKey(nextSigningKey)) {
+    throw new EnvironmentVariableError("QSTASH_NEXT_SIGNING_KEY");
+  }
+
   return new Receiver({
-    currentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY!,
-    nextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY!,
+    currentSigningKey,
+    nextSigningKey,
   });
 }
 
-function extractJsonBody(request: EventRequestWithParsedBody): any {
-  if (!request.body) {
+function extractJsonBody(request: EventRequestWithRawBody): any {
+  if (request.rawBody == null) {
     throw new Error("No body found in request");
   }
-  console.log(request.body);
   try {
-    return typeof request.body == "object"
-      ? request.body
-      : JSON.parse(request.body);
+    const body = request.rawBody.toString("utf-8");
+    return JSON.parse(body);
   } catch (err) {
     throw new TypeError(
       `Could not parse request body as JSON: ${(err as Error).message}`
@@ -80,26 +88,9 @@ function ensureBodyIsApplicationEvent(body: unknown) {
   return body;
 }
 
-function ensureEnvironmentVariables() {
-  if (process.env.QSTASH_CURRENT_SIGNING_KEY === undefined) {
-    throw new Error(
-      "QSTASH_CURRENT_SIGNING_KEY environment variable is not defined"
-    );
+function isValidSigningKey(signingKey: unknown): signingKey is string {
+  if (typeof signingKey !== "string") {
+    return false;
   }
-
-  if (process.env.QSTASH_NEXT_SIGNING_KEY === undefined) {
-    throw new Error(
-      "QSTASH_CURRENT_SIGNING_KEY environment variable is not defined"
-    );
-  }
-}
-
-async function buffer(readable: Readable) {
-  const chunks = [];
-
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-
-  return Buffer.concat(chunks);
+  return signingKey.trim().startsWith("sig_");
 }
