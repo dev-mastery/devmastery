@@ -1,0 +1,18 @@
+{
+  "name": "@devmastery/newsletter-subscription-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm run build:ts && pnpm run build:cs && pnpm run build:go && pnpm run build:java && pnpm run build:py",
+    "build:ts": "pnpx autorest --input-file=./newsletter-subscription-api.yaml --typescript --package-name=@demastery/newsletter-subscription-sdk-ts --output-folder=./ts",
+    "build:cs": "pnpx autorest --input-file=./newsletter-subscription-api.yaml --csharp --package-name=@demastery/newsletter-subscription-sdk-csharp --output-folder=./cs/newsletter-subscription-api",
+    "build:java": "pnpx autorest --input-file=./newsletter-subscription-api.yaml --java --package-name=@demastery/newsletter-subscription-sdk-java --output-folder=./java",
+    "build:py": "pnpx autorest --input-file=./newsletter-subscription-api.yaml --python --package-name=@demastery/newsletter-subscription-sdk-python --output-folder=./py",
+    "build:go": "pnpx autorest --input-file=./newsletter-subscription-api.yaml --go --package-name=@demastery/newsletter-subscription-sdk-go --output-folder=./go",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

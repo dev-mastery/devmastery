@@ -1,0 +1,222 @@
+openapi: 3.0.2
+info:
+  title: Newsletter Subscription API
+  version: 1.0.0
+  description: An API to manage Newsletter Subscriptions
+paths:
+  /newsletter-subscriptions:
+    summary: Path used to manage the list of newslettersubscriptions.
+    description: >-
+      The REST endpoint/path used to list and create zero or more `NewsletterSubscription` entities. 
+      This path contains a `GET` and `POST` operation to perform the list and create tasks,
+      respectively.
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsletterSubscription"
+          description: Successful response - returns an array of `NewsletterSubscription` entities.
+      operationId: getNewsletterSubscriptions
+      summary: List All NewsletterSubscriptions
+      description: Gets a list of all `NewsletterSubscription` entities.
+    post:
+      requestBody:
+        description: A new `NewsletterSubscription` to be created.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscription"
+        required: true
+      responses:
+        "201":
+          description: Successful response.
+      operationId: createNewsletterSubscription
+      summary: Create a NewsletterSubscription
+      description: Creates a new instance of a `NewsletterSubscription`.
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "201"
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+  "/newsletter-subscriptions/{newsletterSubscriptionId}":
+    summary: Path used to manage a single NewsletterSubscription.
+    description: >-
+      The REST endpoint/path used to get, update, and delete single instances of an
+      `NewsletterSubscription`.  This path contains `GET`, `PUT`, and `DELETE` operations used to
+      perform the get, update, and delete tasks, respectively.
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscription"
+          description: Successful response - returns a single `NewsletterSubscription`.
+      operationId: getNewsletterSubscription
+      summary: Get a NewsletterSubscription
+      description: Gets the details of a single instance of a `NewsletterSubscription`.
+    put:
+      requestBody:
+        description: Updated `NewsletterSubscription` information.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscription"
+        required: true
+      responses:
+        "202":
+          description: Successful response.
+      operationId: updateNewsletterSubscription
+      summary: Update a NewsletterSubscription
+      description: Updates an existing `NewsletterSubscription`.
+    delete:
+      responses:
+        "204":
+          description: Successful response.
+      operationId: deleteNewsletterSubscription
+      summary: Delete a NewsletterSubscription
+      description: Deletes an existing `NewsletterSubscription`.
+    parameters:
+      - examples:
+          UUID:
+            value: 76b02a81-f8a6-4d09-b19c-250336249f78
+        name: newsletterSubscriptionId
+        description: A unique identifier for a `NewsletterSubscription`.
+        schema:
+          type: string
+        in: path
+        required: true
+  /event-listeners/on-email-address-verified:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailAddressVerifiedEvent"
+        required: true
+      responses:
+        "200":
+          description: OK
+      security:
+        - Upstash-Signature: []
+        - DevmasteryApiKey: []
+      operationId: onEmailAddressVerified
+      summary: React to verified email addresses
+components:
+  schemas:
+    EmailAddressVerifiedEvent:
+      title: EmailAddressVerifiedEvent
+      description: ""
+      required:
+        - data
+        - createdAt
+        - eventType
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+        eventType:
+          enum:
+            - EMAIL_ADDRESS_VERIFIED
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        data:
+          $ref: "#/components/schemas/VerifiedEmailAddress"
+          description: ""
+      example:
+        id: ""
+        eventType: EMAIL_ADDRESS_VERIFIED
+        createdAt: "2018-02-10T09:30Z"
+        data:
+          emailAddress: email@address.com
+          verifiedAt: "2018-02-10T09:30Z"
+    NewsletterSubscription:
+      title: NewsletterSubscription
+      description: ""
+      required:
+        - emailAddress
+        - id
+        - informedConsent
+        - subscribedAt
+        - newsletterId
+        - firstName
+      type: object
+      properties:
+        id:
+          pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+          type: string
+          example: 757f2ef1-08dd-4856-a375-22daf5beb19b
+        firstName:
+          minLength: 2
+          type: string
+          example: Aisha
+        emailAddress:
+          type: string
+          example: a.jones@abc.com
+        newsletterId:
+          pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+          type: string
+          example: 66e4c6f6-3263-4fba-99a9-ff188c50befc
+        verifiedEmailAddress:
+          pattern: '[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
+          type: string
+          example: a.jones@abc.com
+        informedConsent:
+          pattern: '[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
+          type: string
+          example: I agree to receive emails from DevMastery.com
+        subscribedAt:
+          format: date-time
+          type: string
+          example: "2023-02-02T00:00:00Z"
+        unsubscribedAt:
+          format: date-time
+          description: ""
+          type: string
+          example: "2023-02-02T00:00:00Z"
+        updatedAt:
+          format: date-time
+          description: ""
+          type: string
+          example: "2023-02-02T00:00:00Z"
+      example:
+        id: 757f2ef1-08dd-4856-a375-22daf5beb19b
+        firstName: Aisha
+        emailAddress: email@address.com
+        newsletterId: 66e4c6f6-3263-4fba-99a9-ff188c50befc
+        verifiedEmailAddress: email@address.com
+        informedConsent: I agree to receive emails from DevMastery.com
+        subscribedAt: "2018-02-10T09:30Z"
+        unsubscribedAt: "2018-02-10T09:30Z"
+        updatedAt: "2018-02-10T09:30Z"
+    VerifiedEmailAddress:
+      title: VerifiedEmailAddress
+      description: ""
+      type: object
+      properties:
+        emailAddress:
+          type: string
+        verifiedAt:
+          format: date-time
+          type: string
+      example:
+        emailAddress: email@address.com
+        verifiedAt: "2023-01-01T12:00:00Z"
+  securitySchemes:
+    Upstash-Signature:
+      type: apiKey
+      name: Upstash-Signature
+      in: header
+    DevmasteryApiKey:
+      type: apiKey
+      name: DEVMASTERY-API-KEY
+      in: header

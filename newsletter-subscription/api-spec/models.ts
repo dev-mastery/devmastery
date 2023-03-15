@@ -27,7 +27,3 @@ export interface NewsletterSubscription {
   unsubscribedAt?: string;
   updatedAt?: string;
 }
-export interface VerifiedEmailAddress1 {
-  emailAddress?: string;
-  verifiedAt?: string;
-}
